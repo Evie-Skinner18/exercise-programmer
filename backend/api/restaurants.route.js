@@ -6,8 +6,6 @@ const restaurantsController = new RestaurantsController();
 
 router.route("/").get((req, res) => res.send("Hello world!"));
 
-const restaurants = await restaurantsController.get();
-
-router.route("/all").get((req, res) => res.send(restaurants));
+router.route("/all").get(restaurantsController.get);
 
 export default router;
