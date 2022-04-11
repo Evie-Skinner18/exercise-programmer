@@ -1,12 +1,13 @@
 import express from "express";
-import RestaurantsProvider from "./dtos/restaurantsProvider.js";
+import RestaurantsController from "./restaurants.controller.js";
 
 const router = express.Router();
-const provider = new RestaurantsProvider();
+const restaurantsController = new RestaurantsController();
 
 router.route("/").get((req, res) => res.send("Hello world!"));
 
-const restaurants = provider.getRestaurants();
+const restaurants = await restaurantsController.get();
+
 router.route("/all").get((req, res) => res.send(restaurants));
 
 export default router;
