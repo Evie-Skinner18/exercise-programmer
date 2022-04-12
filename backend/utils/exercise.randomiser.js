@@ -8,11 +8,18 @@ export default class ExerciseRandomiser {
         
         if(exercisesToPickFrom && exercisesToPickFrom.length > 0 
             && exercisesToPickFrom.length >= amountForProgramme) {
+            
+            let randomNumbersAlreadyUsed = [];
             for (let i = 0; i < amountForProgramme; i++) {
-                const randomNumber = this.getRandomNumber(amountForProgramme);
+                let randomNumber = this.getRandomNumber(exercisesToPickFrom.length);
+
+                while (randomNumbersAlreadyUsed.includes(randomNumber)) {
+                    randomNumber = this.getRandomNumber(exercisesToPickFrom.length);
+                }
+
                 const randomlySelectedExercise = exercisesToPickFrom[randomNumber];
-                console.info(`Random exercise at index ${randomNumber}: ${randomlySelectedExercise}`);
                 randomisedExercises.push(randomlySelectedExercise);
+                randomNumbersAlreadyUsed.push(randomNumber);
             }
         }
 

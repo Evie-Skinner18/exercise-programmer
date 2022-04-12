@@ -34,11 +34,9 @@ describe('ExerciseRandomiser', function () {
             new Exercise({ name: "Kettlebell swing" }),
             new Exercise({ name: "Bench press" })
         ];
-        console.log(exercisesToPickFrom);
         const amountForProgramme = 3;
         const randomisedExerciseProgramme = ExerciseRandomiser.getRandomisedExerciseProgramme(exercisesToPickFrom, amountForProgramme);
         assert.equal(randomisedExerciseProgramme.length, amountForProgramme);
     });
   });
-
 });
