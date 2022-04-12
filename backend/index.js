@@ -1,27 +1,23 @@
 import app from "./server.js";
-import mongodb from "mongodb";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import ReviewsProvider from "./api/providers/reviewsProvider.js";
 
 dotenv.config();
 
-// const mongoClient =  new mongodb.MongoClient(process.env.MONGO_DB_CONNECTION_STRING);
-await mongoose.connect(process.env.MONGO_DB_CONNECTION_STRING);
 
 const port = process.env.PORT || 8000;
 console.log(`Port is ${port}`);
 
 async function connectMongoClient() {
     try {
-      // Connect the client to the server
-    //   await mongoClient.connect();
-      // Establish and verify connection
-    //   await mongoClient.db("admin").command({ ping: 1 });
-
+      await mongoose.connect(process.env.MONGO_DB_CONNECTION_STRING, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+      });
       console.log("Connected successfully to db server");
-    } finally {
-      // Ensures that the client will close when you finish/error
-    //   await mongoClient.close();
+    } catch(error) {
+      console.error(error.message);
     }
   }
 
