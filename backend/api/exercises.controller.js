@@ -26,7 +26,27 @@ export default class ExercisesController {
             exercises: exercises,
             pageNumber: pageNumber,
             filters: filters,
-            exercisesPerPage: restaurantsPerPage,
+            exercisesPerPage: exercisesPerPage,
+        }
+
+        res.json(response);
+    }
+
+    static async getRandom(req, res, next) {
+        const randomExercise = await ExercisesProvider.getRandomExercise();
+        const response = {
+            randomExercise: randomExercise
+        }
+
+        res.json(response);
+    }
+
+    // might want this in a req.body if the person is submitting via a form
+    static async getProgramme(req, res, next) {
+        const numberOfExercises = req.query.number ? parseInt(req.query.number) : 0;
+        const exercises = await ExercisesProvider.getRandomisedProgramme(numberOfExercises);
+        const response = {
+            exercises: exercises
         }
 
         res.json(response);

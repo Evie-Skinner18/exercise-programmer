@@ -9,6 +9,9 @@ export default class ExerciseRandomiser {
         if(exercisesToPickFrom && exercisesToPickFrom.length > 0 
             && exercisesToPickFrom.length >= amountForProgramme) {
             
+            const noAmountSpecified = amountForProgramme == 0 || !amountForProgramme;
+            amountForProgramme = noAmountSpecified ? exercisesToPickFrom.length : amountForProgramme;
+            
             let randomNumbersAlreadyUsed = [];
             for (let i = 0; i < amountForProgramme; i++) {
                 let randomNumber = this.getRandomNumber(exercisesToPickFrom.length);

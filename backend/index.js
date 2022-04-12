@@ -1,10 +1,8 @@
 import app from "./server.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import ReviewsProvider from "./api/providers/reviewsProvider.js";
 
 dotenv.config();
-
 
 const port = process.env.PORT || 8000;
 console.log(`Port is ${port}`);
