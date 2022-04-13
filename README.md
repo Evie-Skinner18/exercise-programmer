@@ -6,6 +6,8 @@
 
 ## Tools and Technologies Used
 - React
+- React Router
+- TailwindCSS
 - Mongo DB Atlas
 - Express
 - Node
