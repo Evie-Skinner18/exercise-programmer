@@ -1,4 +1,4 @@
-import ExercisesProvider from "./providers/exercises.provider.js";
+import ExercisesProvider from "./services/exercises.service.js";
 
 export default class ExercisesController {
 

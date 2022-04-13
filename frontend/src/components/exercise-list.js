@@ -1,15 +1,31 @@
-import { Switch, Route, Link } from "react-router-dom";
-
+import { useEffect, useState } from 'react';
 import '../App.css';
+import ExercisesProvider from '../providers/exercises-provider';
 import Exercise from "./exercise";
 
-function ExerciseList() {
-  return (
-    <div className="exercise-list">
-        <h2 className="text-orange-700">List of exercises</h2>
-        <Exercise></Exercise>
-    </div>
-  );
+
+
+const ExerciseList = props => {
+    const [ exerciseList, setExerciseList ] = useState([]);
+
+    useEffect(() => {
+        getExerciseList();
+    })
+
+    function getExerciseList() {
+        const provider = new ExercisesProvider();
+        const exercises = provider.getExercises();
+        setExerciseList(exercises);
+    } 
+
+    return (
+        <div className="exercise-list p-16">
+            <h2 className="text-orange-700">List of exercises</h2>
+            { exerciseList.map((exercise, index) => (
+                <Exercise exercise={exercise}></Exercise>
+            ))}
+        </div>
+    );
 }
 
 export default ExerciseList;
