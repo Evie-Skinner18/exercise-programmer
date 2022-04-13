@@ -18,9 +18,7 @@ export default class ExercisesProvider {
         const axiosClient = await HttpClient.axiosClient();
         
         let getExercisesResponse = {};
-        const queryString = `exercises/programme?number=${numberOfExercises}`;
-        console.log(queryString);
-        const response = await axiosClient.get(queryString);
+        const response = await axiosClient.get(`exercises/programme?number=${numberOfExercises}`);
         console.log(response);
 
         if (response.data) {
