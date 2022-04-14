@@ -19,7 +19,6 @@ export default class ExercisesProvider {
         
         let getExercisesResponse = {};
         const response = await axiosClient.get(`exercises/programme?number=${numberOfExercises}`);
-        console.log(response);
 
         if (response.data) {
             getExercisesResponse = response.data;

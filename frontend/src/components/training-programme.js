@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import '../App.css';
 import ExercisesProvider from '../providers/exercises-provider';
 import Exercise from "./exercise";
 
-const TrainingProgramme = props => {
+function TrainingProgramme() {
+    const numberOfExercises = useParams()["numberOfExercises"];
     const [ randomExerciseList, setTrainingProgramme ] = useState([]);
 
     useEffect(() => {
@@ -14,7 +16,6 @@ const TrainingProgramme = props => {
 
     async function getTrainingProgramme() {
         const provider = new ExercisesProvider();
-        const numberOfExercises = 4;
         const getTrainingProgrammeResponse = await provider.getTrainingProgramme(numberOfExercises);
         setTrainingProgramme(getTrainingProgrammeResponse.exercises);
     }

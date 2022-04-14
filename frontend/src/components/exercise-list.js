@@ -21,7 +21,7 @@ const ExerciseList = props => {
     if(exerciseList.length > 0) {
         return (
             <div className="exercise-list p-16">
-                <h2 className="text-green-700">List of exercises</h2>
+                <h2 className="text-green-700">All exercises</h2>
                 { exerciseList.map((exercise, index) => (
                     <Exercise exercise={exercise} key={exercise._id}></Exercise>
                 ))}
@@ -34,7 +34,6 @@ const ExerciseList = props => {
             </div>
         );
     }
-
 }
 
 export default ExerciseList;
