@@ -1,0 +1,20 @@
+.navbar {
+    border: 3px double dodgerblue;
+    width: 40px;
+    height: 100vh;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    background-color: aquamarine;
+}
+
+.navbar a {
+    writing-mode: vertical-lr;
+    transform: scale(-1);
+    padding: 4px 4px 4px 4px;
+    margin-bottom: 80%;
+}
+
+.navbar a i {
+    transform: scale(-1);
+}
