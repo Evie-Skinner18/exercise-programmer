@@ -1,5 +1,6 @@
 import { Exercise } from "../../models/exercise.js";
 import ExerciseRandomiser from "../../utils/exercise.randomiser.js";
+import mongoose from "mongoose";
 
 // load the exercises collection into memory once
 export default class ExercisesProvider {
@@ -57,5 +58,20 @@ export default class ExercisesProvider {
         }
 
         return randomExercises;
+    }
+
+    static async addExercise(exercise) {    
+        try {
+
+            const newExercise = new Exercise({
+                _id: new mongoose.Types.ObjectId(),
+                name: exercise.name,
+                focus: exercise.focus,
+                difficulty: exercise.difficulty,
+            });
+            return await Exercise.create(newExercise);    
+        } catch (error) {
+            console.error(`Could not create an exercise for ${exercise.name}. Error: ${error}`);
+        }
     }
 }

@@ -41,13 +41,20 @@ export default class ExercisesController {
         res.json(response);
     }
 
-    // might want this in a req.body if the person is submitting via a form
     static async getProgramme(req, res, next) {
         const numberOfExercises = req.query.number ? parseInt(req.query.number) : 0;
         const exercises = await ExercisesProvider.getRandomisedProgramme(numberOfExercises);
         const response = {
             exercises: exercises
         }
+
+        res.json(response);
+    }
+
+    static async post(req, res, next) {
+        const exercise = req.body.exercise;
+
+        const response = await ExercisesProvider.addExercise(exercise);
 
         res.json(response);
     }

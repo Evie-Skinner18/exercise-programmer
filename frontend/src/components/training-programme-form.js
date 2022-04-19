@@ -30,9 +30,15 @@ function TrainingProgrammeForm({ exerciseList }) {
                 How many of those do you need in your programme (minimum of two)?
             </h2>
             <form onSubmit={ submitTrainingProgrammeForm }>
-                <input type="number" name="numberOfExercises" className="mr-4"
-                value={ desiredNumberOfExercises } onChange={ (e) => setNumber(e.target.value) }
-                min="2" max={ numberOfExercisesAvailable }></input>
+                <input 
+                    type="number" 
+                    name="numberOfExercises" 
+                    className="mr-4"
+                    value={ desiredNumberOfExercises } 
+                    onChange={ (e) => setNumber(e.target.value) }
+                    min="2" 
+                    max={ numberOfExercisesAvailable }
+                />
                 <button className="border-solid border-2 bg-slate-200 border-green-200 rounded-full p-2">
                     <Link to={`/random-programme/${desiredNumberOfExercises}`}>Get programme</Link>
                 </button>

@@ -6,11 +6,6 @@ const router = express.Router();
 router.route("/search").get(ExercisesController.get);
 router.route("/random").get(ExercisesController.getRandom);
 router.route("/programme").get(ExercisesController.getProgramme);
-
-// router
-//   .route("/")
-//   .post(reviewsController.post)
-//   .put(reviewsController.put)
-//   .delete(reviewsController.delete);
+router.route("/").post(ExercisesController.post);
 
 export default router;
