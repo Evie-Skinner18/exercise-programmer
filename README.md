@@ -12,3 +12,7 @@
 - Express
 - Node
 - Mocha
+
+# How to Run the App
+- Frontend: npm start
+- API: nodemon server
