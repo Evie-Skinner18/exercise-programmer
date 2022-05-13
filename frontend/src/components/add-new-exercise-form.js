@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";   
 import '../App.css';
 import ExercisesProvider from '../providers/exercises-provider';
+import ToastMessage from "./toast-message";
 
 function AddNewExerciseForm() {
     const [newExercise, setNewExercise] = useState({
@@ -9,14 +11,33 @@ function AddNewExerciseForm() {
         difficulty: ""
     });
 
+    let showToastMessage = false;
+    let exerciseSuccessfullyAdded = false;
+
+    let toastMessageStyles = {
+        toastMessage : {
+            display : `${showToastMessage? "inline" : "none"}`
+        }
+    };
+
+    const navigate = useNavigate();
+
     async function submitNewExercise(event) {
         event.preventDefault();
         const provider = new ExercisesProvider();
 
         const exerciseRequestBody = { exercise: newExercise };
-        console.log(exerciseRequestBody);
-        await provider.addExercise(exerciseRequestBody);
-        // then redirect to /exercise-list
+        const addExerciseResponse = await provider.addExercise(exerciseRequestBody);
+
+        if (addExerciseResponse.name) {
+            exerciseSuccessfullyAdded = true;
+        }
+
+        redirectToExerciseList();
+    }
+
+    function redirectToExerciseList() {
+        navigate("/exercise-list");
     }
 
     // how would I make just one reuseable event handler?
@@ -77,6 +98,11 @@ function AddNewExerciseForm() {
                     Add
                 </button>
             </form>
+            <ToastMessage 
+                exercise={ newExercise } 
+                isSuccessMessage={ exerciseSuccessfullyAdded } 
+                toastMessageStyles={ toastMessageStyles }>
+            </ToastMessage>
         </div>
     );
 }
