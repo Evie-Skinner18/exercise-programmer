@@ -8,6 +8,7 @@
 - React
 - React Router
 - TailwindCSS
+- FontAwesome icons
 - Mongo DB Atlas
 - Express
 - Node
