@@ -1,18 +1,21 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import '../App.css';
 import ExercisesProvider from '../providers/exercises-provider';
 import ToastMessage from "./toast-message";
 
 function AddNewExerciseForm({ addExercise }) {
-    const [newExercise, setNewExercise] = useState({
-        name: "",
-        focus: "",
-        difficulty: ""
-    });
-
+    let exerciseForToastMessage = {};
     let showToastMessage = false;
     let exerciseSuccessfullyAdded = false;
+
+    const { register, handleSubmit, formState: { errors, isValid } } = useForm({
+        mode: "onChange"
+    });
+
+    let addButtonTailwindClasses = isValid? 
+        "border-solid border-2 bg-green-500 border-slate-200 rounded-full p-2" 
+        : 
+        "border-solid border-2 bg-red-500 border-slate-200 rounded-full p-2";
 
     let toastMessageStyles = {
         toastMessage : {
@@ -20,10 +23,7 @@ function AddNewExerciseForm({ addExercise }) {
         }
     };
 
-    const { register, handleSubmit, formState: { errors } } = useForm();
-
-    async function submitNewExercise(event) {
-        event.preventDefault();
+    async function submitNewExercise(newExercise) {
         const provider = new ExercisesProvider();
 
         const exerciseRequestBody = { exercise: newExercise };
@@ -31,74 +31,46 @@ function AddNewExerciseForm({ addExercise }) {
 
         if (addExerciseResponse.name) {
             exerciseSuccessfullyAdded = true;
+            exerciseForToastMessage = newExercise;
         }
 
         addExercise(exerciseSuccessfullyAdded);
     }
 
-    // how would I make just one reuseable event handler?
-    const handleNameInputChange = (event) => {
-        event.persist();
-        setNewExercise((newExercise) => ({
-            ...newExercise,
-            name: event.target.value,
-        }));
-    };
-
-    const handleFocusInputChange = (event) => {
-        event.persist();
-        setNewExercise((newExercise) => ({
-            ...newExercise,
-            focus: event.target.value,
-        }));
-    };
-
-    const handleDifficultyInputChange = (event) => {
-        event.persist();
-        setNewExercise((newExercise) => ({
-            ...newExercise,
-            difficulty: event.target.value,
-        }));
-    };
-
     return (
         <div className="add-exercise-form p-16">
-            <form onSubmit={ submitNewExercise }>
+            <form onSubmit={ handleSubmit(submitNewExercise) }>
                 <input
                     placeholder="Exercise name"
                     type="text" 
                     name="name"
-                    required
                     className="mr-4 p-2 border-solid border-2"
-                    value={  newExercise.name } 
-                    onChange={ (e) => handleNameInputChange(e) } 
+                    {...register("name", { required: true })}
                 />
+                { errors.name && <p className="text-red-500">Please enter a name for this exercise</p> }
                 <input 
                     placeholder="Exercise focus area (e.g core)"
                     type="text" 
                     name="focus"
-                    required
                     className="mr-4 p-2 border-solid border-2"
-                    value={  newExercise.focus } 
-                    onChange={ (e) => handleFocusInputChange(e) } 
+                    {...register("focus", { required: true })}
                 />
+                { errors.focus && <p className="text-red-500">Please enter a focus area for this exercise</p> }
                 <input
                     placeholder="Exercise difficulty out of 5"
                     type="number" 
                     name="difficulty" 
-                    required
-                    className="mr-4 p-2 border-solid border-2"
-                    value={  newExercise.difficulty } 
-                    onChange={ (e) => handleDifficultyInputChange(e) }
-                    min="1"
-                    max="5"
+                    {...register("difficulty", { required: true, min: 1, max: 5 })}
                 />
-                <button className="border-solid border-2 bg-green-500 border-slate-200 rounded-full p-2">
+                { errors.difficulty && <p className="text-red-500">Please enter a difficulty number out of 5 for this exercise</p> }
+                <button 
+                    disabled={ !isValid }
+                    className={ addButtonTailwindClasses }>
                     Add
                 </button>
             </form>
             <ToastMessage 
-                exercise={ newExercise } 
+                exercise={ exerciseForToastMessage } 
                 isSuccessMessage={ exerciseSuccessfullyAdded } 
                 toastMessageStyles={ toastMessageStyles }>
             </ToastMessage>
