@@ -26,4 +26,17 @@ export default class ExercisesProvider {
 
         return getExercisesResponse;
     }
+
+    async addExercise(exercise) {
+        const axiosClient = await HttpClient.axiosClient();
+
+        let addExerciseResponse = {};
+        const response = await axiosClient.post(`exercises/`, exercise);
+
+        if (response.data) {
+            addExerciseResponse = response.data;
+        }
+
+        return addExerciseResponse;
+    }
 }

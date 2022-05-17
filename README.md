@@ -8,7 +8,12 @@
 - React
 - React Router
 - TailwindCSS
+- FontAwesome icons
 - Mongo DB Atlas
 - Express
 - Node
 - Mocha
+
+# How to Run the App
+- Frontend: npm start
+- API: nodemon server

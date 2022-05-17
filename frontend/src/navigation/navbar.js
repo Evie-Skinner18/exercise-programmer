@@ -20,7 +20,6 @@ function Navbar() {
                     <i className="fa-solid fa-home"></i>
                 </Link>
             </li>
-
         </nav>
     </div>
   );
