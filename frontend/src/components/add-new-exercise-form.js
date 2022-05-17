@@ -1,21 +1,10 @@
-import sanitizeHtml from "sanitize-html";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import '../App.css';
 import ExercisesProvider from '../providers/exercises-provider';
 import ToastMessage from "./toast-message";
 
 function AddNewExerciseForm({ addExercise }) {
-    // add to separate sanitosor class
-    // for front end sanitisation
-    // then add another separate class for front end validation
-    const sanitiseHtmlOptions = {
-        allowedTags: [],
-        allowedAttributes: {},
-        allowedIframeHostnames: []
-      };
-
-      sanitizeHtml(sanitiseHtmlOptions)
-
     const [newExercise, setNewExercise] = useState({
         name: "",
         focus: "",
@@ -30,6 +19,8 @@ function AddNewExerciseForm({ addExercise }) {
             display : `${showToastMessage? "inline" : "none"}`
         }
     };
+
+    const { register, handleSubmit, formState: { errors } } = useForm();
 
     async function submitNewExercise(event) {
         event.preventDefault();

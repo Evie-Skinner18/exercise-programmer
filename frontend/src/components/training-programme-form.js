@@ -3,21 +3,28 @@ import { useState, useEffect } from "react";
 import '../App.css';
 import ExercisesProvider from '../providers/exercises-provider';
 
-function TrainingProgrammeForm({ exerciseList }) {
+function TrainingProgrammeForm() {
     const [numberOfExercisesAvailable, setNumberAvailable] = useState(0);
     const [desiredNumberOfExercises, setNumber] = useState(0);
 
     useEffect(() => {
-        if (!exerciseList || exerciseList.length === 0) {
+        if (!numberOfExercisesAvailable) {
             getNumberOfExercisesAvailable();
         }
     })
 
     async function getNumberOfExercisesAvailable() {
+        console.log(numberOfExercisesAvailable);
         const provider = new ExercisesProvider();
         const getExercisesResponse = await provider.getExercises();
         setNumberAvailable(getExercisesResponse.exercises.length);
     }
+
+    const handleDesiredNumberInputChange = (event) => {
+        event.persist();
+        const newNumber = event.target.value;
+        setNumber(newNumber);
+    };
 
     const submitTrainingProgrammeForm = (event) => {
         event.preventDefault();
@@ -35,7 +42,7 @@ function TrainingProgrammeForm({ exerciseList }) {
                     name="numberOfExercises" 
                     className="mr-4"
                     value={ desiredNumberOfExercises } 
-                    onChange={ (e) => setNumber(e.target.value) }
+                    onChange={ (e) => handleDesiredNumberInputChange(e) }
                     min="2" 
                     max={ numberOfExercisesAvailable }
                 />

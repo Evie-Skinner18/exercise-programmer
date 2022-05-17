@@ -1,4 +1,5 @@
 import { HttpClient } from "./http-client";
+import Sanitiser from "../utils/sanitiser";
 
 export default class ExercisesProvider {
     async getExercises(){
@@ -29,6 +30,11 @@ export default class ExercisesProvider {
 
     async addExercise(exercise) {
         const axiosClient = await HttpClient.axiosClient();
+
+        const sanitiser = new Sanitiser();
+        exercise.exercise.name = sanitiser.sanitiseUserInput(exercise.exercise.name);
+        exercise.exercise.focus = sanitiser.sanitiseUserInput(exercise.exercise.focus);
+        exercise.exercise.difficulty = sanitiser.sanitiseUserInput(exercise.exercise.difficulty);
 
         let addExerciseResponse = {};
         const response = await axiosClient.post(`exercises/`, exercise);

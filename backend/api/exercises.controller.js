@@ -53,6 +53,7 @@ export default class ExercisesController {
         res.json(response);
     }
 
+    // does the given exercise already exist?
     static async post(req, res, next) {
         const exercise = req.body.exercise;
 
