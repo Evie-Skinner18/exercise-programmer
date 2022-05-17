@@ -1,9 +1,21 @@
+import sanitizeHtml from "sanitize-html";
 import { useState } from "react";
 import '../App.css';
 import ExercisesProvider from '../providers/exercises-provider';
 import ToastMessage from "./toast-message";
 
 function AddNewExerciseForm({ addExercise }) {
+    // add to separate sanitosor class
+    // for front end sanitisation
+    // then add another separate class for front end validation
+    const sanitiseHtmlOptions = {
+        allowedTags: [],
+        allowedAttributes: {},
+        allowedIframeHostnames: []
+      };
+
+      sanitizeHtml(sanitiseHtmlOptions)
+
     const [newExercise, setNewExercise] = useState({
         name: "",
         focus: "",
@@ -65,6 +77,7 @@ function AddNewExerciseForm({ addExercise }) {
                     placeholder="Exercise name"
                     type="text" 
                     name="name"
+                    required
                     className="mr-4 p-2 border-solid border-2"
                     value={  newExercise.name } 
                     onChange={ (e) => handleNameInputChange(e) } 
@@ -73,6 +86,7 @@ function AddNewExerciseForm({ addExercise }) {
                     placeholder="Exercise focus area (e.g core)"
                     type="text" 
                     name="focus"
+                    required
                     className="mr-4 p-2 border-solid border-2"
                     value={  newExercise.focus } 
                     onChange={ (e) => handleFocusInputChange(e) } 
@@ -81,6 +95,7 @@ function AddNewExerciseForm({ addExercise }) {
                     placeholder="Exercise difficulty out of 5"
                     type="number" 
                     name="difficulty" 
+                    required
                     className="mr-4 p-2 border-solid border-2"
                     value={  newExercise.difficulty } 
                     onChange={ (e) => handleDifficultyInputChange(e) }

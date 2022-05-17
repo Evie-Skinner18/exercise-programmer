@@ -21,7 +21,6 @@ const ExerciseList = props => {
     }
 
     const handleAddExercise = (successfullyAdded) => {
-        console.log("successfully added: " + successfullyAdded);
         if (successfullyAdded) {
             getExerciseList();
         }

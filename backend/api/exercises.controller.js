@@ -2,6 +2,8 @@ import ExercisesProvider from "./services/exercises.service.js";
 
 export default class ExercisesController {
 
+    sanitiser = expressMongoSanitize();
+
     static async get(req, res, next) {
         const exercisesPerPage = req.query.exercisesPerPage ? parseInt(req.query.exercisesPerPage, 10) : 50;
         const pageNumber = req.query.pageNumber ? parseInt(req.query.pageNumber, 10) : 0;

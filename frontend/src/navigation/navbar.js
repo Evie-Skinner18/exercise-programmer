@@ -11,11 +11,6 @@ function Navbar() {
                 </Link>
             </li>
             <li>
-                <Link to={"/add-exercise"}>
-                    <i className="fa-solid fa-add"></i>
-                </Link>
-            </li>
-            <li>
                 <Link to={"/exercise-list"}>
                     <i className="fa-solid fa-dumbbell"></i>
                 </Link>
