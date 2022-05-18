@@ -1,11 +1,12 @@
-import { Link } from 'react-router-dom';
+import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
-import '../App.css';
+import { useNavigate } from 'react-router-dom';
 import ExercisesProvider from '../providers/exercises-provider';
+import '../App.css';
 
 function TrainingProgrammeForm() {
     const [numberOfExercisesAvailable, setNumberAvailable] = useState(0);
-    const [desiredNumberOfExercises, setNumber] = useState(0);
+    const router = useNavigate();
 
     useEffect(() => {
         if (!numberOfExercisesAvailable) {
@@ -20,14 +21,19 @@ function TrainingProgrammeForm() {
         setNumberAvailable(getExercisesResponse.exercises.length);
     }
 
-    const handleDesiredNumberInputChange = (event) => {
-        event.persist();
-        const newNumber = event.target.value;
-        setNumber(newNumber);
-    };
+    const { register, handleSubmit, formState: { errors, isValid } } = useForm({
+        mode: "onChange"
+    });
 
-    const submitTrainingProgrammeForm = (event) => {
-        event.preventDefault();
+    let getProgrammeButtonTailwindClasses = isValid? 
+        "border-solid border-2 bg-slate-200 border-green-200 rounded-full p-2" 
+        : 
+        "border-solid border-2 bg-red-500 border-slate-200 rounded-full p-2";
+
+
+    function submitTrainingProgrammeForm(userInput){
+        const desiredNumberOfExercises = userInput.numberOfExercises;
+        router(`/random-programme/${desiredNumberOfExercises}`);
     }
 
     return (
@@ -36,18 +42,24 @@ function TrainingProgrammeForm() {
                 There are { numberOfExercisesAvailable } movements available in your exercise list. 
                 How many of those do you need in your programme (minimum of two)?
             </h2>
-            <form onSubmit={ submitTrainingProgrammeForm }>
+            <form onSubmit={ handleSubmit(submitTrainingProgrammeForm) }>
                 <input 
                     type="number" 
                     name="numberOfExercises" 
                     className="mr-4"
-                    value={ desiredNumberOfExercises } 
-                    onChange={ (e) => handleDesiredNumberInputChange(e) }
-                    min="2" 
-                    max={ numberOfExercisesAvailable }
+                    {...register("numberOfExercises", { 
+                        required: true, 
+                        min: 2, 
+                        max: numberOfExercisesAvailable, 
+                        valueAsNumber: true,
+                        validate: (value) => value === Math.floor(value)
+                    })}
                 />
-                <button className="border-solid border-2 bg-slate-200 border-green-200 rounded-full p-2">
-                    <Link to={`/random-programme/${desiredNumberOfExercises}`}>Get programme</Link>
+                { errors.numberOfExercises && <p className="text-red-500">Please enter a whole number from 2 to { numberOfExercisesAvailable }</p> }
+                <button 
+                    className={ getProgrammeButtonTailwindClasses }
+                    disabled={ !isValid }>
+                    Get programme
                 </button>
             </form>
         </div>

@@ -2,7 +2,7 @@ import { HttpClient } from "./http-client";
 import Sanitiser from "../utils/sanitiser";
 
 export default class ExercisesProvider {
-    async getExercises(){
+    async getExercises(numberToReturn){
         const axiosClient = await HttpClient.axiosClient();
         
         let getExercisesResponse = {};

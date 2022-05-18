@@ -3,6 +3,7 @@ import ExerciseRandomiser from "../../utils/exercise.randomiser.js";
 import mongoose from "mongoose";
 
 // load the exercises collection into memory once
+// how do I get the total no available?
 export default class ExercisesProvider {
 
     static async searchExercises({

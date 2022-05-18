@@ -29,7 +29,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 const timeLimit = 10 * 60 * 1000;
-const maxNumberOfRequestsAllowed = 100;
+const maxNumberOfRequestsAllowed = 500;
 
 const rateLimiter = rateLimit({
   windowMs: timeLimit,

@@ -5,7 +5,7 @@ export default class ExercisesController {
     sanitiser = expressMongoSanitize();
 
     static async get(req, res, next) {
-        const exercisesPerPage = req.query.exercisesPerPage ? parseInt(req.query.exercisesPerPage, 10) : 50;
+        const exercisesPerPage = req.query.exercisesPerPage ? parseInt(req.query.exercisesPerPage, 10) : 100;
         const pageNumber = req.query.pageNumber ? parseInt(req.query.pageNumber, 10) : 0;
 
         let filters = {}
@@ -29,6 +29,7 @@ export default class ExercisesController {
             pageNumber: pageNumber,
             filters: filters,
             exercisesPerPage: exercisesPerPage,
+            // totalNumberAvailable
         }
 
         res.json(response);

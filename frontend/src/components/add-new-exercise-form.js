@@ -58,14 +58,15 @@ function AddNewExerciseForm({ addExercise }) {
                 { errors.focus && <p className="text-red-500">Please enter a focus area for this exercise</p> }
                 <input
                     placeholder="Exercise difficulty out of 5"
-                    type="number" 
+                    type="number"
+                    step="any" 
                     name="difficulty" 
                     {...register("difficulty", { required: true, min: 1, max: 5 })}
                 />
                 { errors.difficulty && <p className="text-red-500">Please enter a difficulty number out of 5 for this exercise</p> }
                 <button 
                     disabled={ !isValid }
-                    className={ addButtonTailwindClasses }>
+                    className={ addButtonTailwindClasses     }>
                     Add
                 </button>
             </form>
