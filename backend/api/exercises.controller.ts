@@ -9,17 +9,19 @@ export default class ExercisesController {
     }
 
     // might need to return Promise<Response>
+    // make a type for Filters
+    // TS-ify the service
     async get(req: Request, res: Response): Promise<void> {
-        const exercisesPerPage = req.query.exercisesPerPage ? parseInt(req.query.exercisesPerPage, 10) : 100;
-        const pageNumber = req.query.pageNumber ? parseInt(req.query.pageNumber, 10) : 0;
+        const exercisesPerPage = req.query.exercisesPerPage ? parseInt(req.query.exercisesPerPage as string, 10) : 100;
+        const pageNumber = req.query.pageNumber ? parseInt(req.query.pageNumber as string, 10) : 0;
 
         let filters = {}
         if (req.query.focus) {
-            filters.focus = req.query.focus.trim().toLower()
+            filters.focus = (req.query.focus as string).trim().toLowerCase()
         } else if (req.query.difficulty) {
-            filters.difficulty = req.query.difficulty.trim().toLower()
+            filters.difficulty = (req.query.difficulty as string).trim().toLowerCase()
         } else if (req.query.name) {
-            filters.name = req.query.name.trim().toLower()
+            filters.name = (req.query.name as string).trim().toLowerCase()
         }
 
         const searchExercisesParams = { 
@@ -40,7 +42,7 @@ export default class ExercisesController {
         res.json(response);
     }
 
-    async getRandom(req, res, next) {
+    async getRandom(req: Request, res: Response): Promise<void> {
         const randomExercise = await this.exercisesService.getRandomExercise();
         const response = {
             randomExercise: randomExercise
@@ -49,8 +51,8 @@ export default class ExercisesController {
         res.json(response);
     }
 
-    async getProgramme(req, res, next) {
-        const numberOfExercises = req.query.number ? parseInt(req.query.number) : 0;
+    async getProgramme(req: Request, res: Response): Promise<void> {
+        const numberOfExercises = req.query.number ? parseInt(req.query.number as string) : 0;
         const exercises = await this.exercisesService.getRandomisedProgramme(numberOfExercises);
         const response = {
             exercises: exercises
@@ -59,10 +61,8 @@ export default class ExercisesController {
         res.json(response);
     }
 
-    async post(req, res, next) {
+    async post(req: Request, res: Response): Promise<void> {
         const exercise = req.body.exercise;
-        // in strict mode (JS clsses) 'this' gets reset to undefined
-        console.log(this.message + " from POST method");
         const response = await this.exercisesService.addExercise(exercise);
 
         res.json(response);

@@ -5,21 +5,10 @@ import xssClean from "xss-clean";
 import hpp from "hpp";
 import { rateLimit } from "express-rate-limit";
 import helmet from "helmet";
-
 import dotenv from "dotenv";
 import exercises from "./api/exercises.route";
 
-
 const app: Application = express();
-
-// app.get(
-//     "/",
-//     async (req: Request, res: Response): Promise<Response> => {
-//         return res.status(200).send({
-//             message: "Hello World!",
-//         });
-//     }
-// );
 
 dotenv.config();
 

@@ -26,6 +26,7 @@ console.log(`Port is ${port}`);
 
   async function connectMongoClient() {
     try {
+      // use ConnectOptions type
       await mongoose.connect(process.env.MONGO_DB_CONNECTION_STRING as string, {
         useNewUrlParser: true,
         useUnifiedTopology: true
