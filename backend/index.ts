@@ -26,13 +26,14 @@ console.log(`Port is ${port}`);
 
   async function connectMongoClient() {
     try {
-      await mongoose.connect(process.env.MONGO_DB_CONNECTION_STRING, {
+      await mongoose.connect(process.env.MONGO_DB_CONNECTION_STRING as string, {
         useNewUrlParser: true,
         useUnifiedTopology: true
       });
       console.log("Connected successfully to db server");
     } catch(error) {
-      dbConnectionError = error.message;
+      const dbError = error as Error;
+      dbConnectionError = dbError.message;
       console.error(dbConnectionError);
     }
   }

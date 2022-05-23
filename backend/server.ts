@@ -1,5 +1,4 @@
-import express from "express";
-
+import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import expressMongoSanitize from "express-mongo-sanitize";
 import xssClean from "xss-clean";
@@ -8,11 +7,22 @@ import { rateLimit } from "express-rate-limit";
 import helmet from "helmet";
 
 import dotenv from "dotenv";
-import exercises from "./api/exercises.route.js";
+import exercises from "./api/exercises.route";
+
+
+const app: Application = express();
+
+// app.get(
+//     "/",
+//     async (req: Request, res: Response): Promise<Response> => {
+//         return res.status(200).send({
+//             message: "Hello World!",
+//         });
+//     }
+// );
 
 dotenv.config();
 
-const app = express();
 app.use(express.json());
 
 // security precautions

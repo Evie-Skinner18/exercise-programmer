@@ -1,15 +1,15 @@
-import ExercisesService from "./services/exercises.service.js";
+import ExercisesService from "./services/exercises.service";
+import { Request, Response } from "express";
 
 export default class ExercisesController {
+    exercisesService: ExercisesService;
 
     constructor() {
         this.exercisesService = new ExercisesService();
-        this.message = "Hello";
-
-        console.log(this.message + " from constructor");
     }
 
-    async get(req, res, next) {
+    // might need to return Promise<Response>
+    async get(req: Request, res: Response): Promise<void> {
         const exercisesPerPage = req.query.exercisesPerPage ? parseInt(req.query.exercisesPerPage, 10) : 100;
         const pageNumber = req.query.pageNumber ? parseInt(req.query.pageNumber, 10) : 0;
 
