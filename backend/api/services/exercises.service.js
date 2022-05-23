@@ -2,11 +2,13 @@ import { Exercise } from "../../models/exercise.js";
 import ExerciseRandomiser from "../../utils/exercise.randomiser.js";
 import mongoose from "mongoose";
 
-// load the exercises collection into memory once
 // how do I get the total no available?
-export default class ExercisesProvider {
+export default class ExercisesService {
+    constructor() {
+        this.allExercises = Exercise.find({});
+    }    
 
-    static async searchExercises({
+    async searchExercises({
         filters = null,
         pageNumber = 0,
         exercisesPerPage = 0
@@ -26,9 +28,14 @@ export default class ExercisesProvider {
                     query = { "focus": { $eq: filters["focus"] } }
                 }
             }
-            exercises = await Exercise.find(query)
-                .limit(exercisesPerPage)
-                .skip(exercisesPerPage * pageNumber);
+
+            if (!this.exercisesHaveBeenLoaded()) {
+                this.allExercises = await Exercise.find({});
+            }
+
+            exercises = await this.allExercises.find(query)
+            .limit(exercisesPerPage)
+            .skip(exercisesPerPage * pageNumber);
         } catch (error) {
             console.error(`Unable to find exercises. Error:${error}`);
             return exercises;
@@ -37,11 +44,13 @@ export default class ExercisesProvider {
         return exercises;
     }
 
-    static async getRandomExercise() {
+    async getRandomExercise() {
         let randomExercise = new Exercise();
         try {
-            const exercises = await Exercise.find({});
-            randomExercise = ExerciseRandomiser.getRandomisedExerciseProgramme(exercises, 1)[0];    
+            if (!this.exercisesHaveBeenLoaded()) {
+                this.allExercises = await Exercise.find({});
+            }
+            randomExercise = ExerciseRandomiser.getRandomisedExerciseProgramme(this.allExercises, 1)[0];    
         } catch (error) {
             console.error(`Unable to get random exercise. Error: ${error}`);
         }
@@ -49,11 +58,13 @@ export default class ExercisesProvider {
         return randomExercise;
     }
 
-    static async getRandomisedProgramme(numberOfExercises) {
+    async getRandomisedProgramme(numberOfExercises) {
         let randomExercises = [];
         try {
-            const exercises = await Exercise.find({});
-            randomExercises = ExerciseRandomiser.getRandomisedExerciseProgramme(exercises, numberOfExercises);    
+            if (!this.exercisesHaveBeenLoaded()) {
+                this.allExercises = await Exercise.find({});
+            }
+            randomExercises = ExerciseRandomiser.getRandomisedExerciseProgramme(this.allExercises, numberOfExercises);    
         } catch (error) {
             console.error(`Unable to get exercise programme. Error: ${error}`);
         }
@@ -61,18 +72,40 @@ export default class ExercisesProvider {
         return randomExercises;
     }
 
-    static async addExercise(exercise) {    
-        try {
+    async exerciseAlreadyExists(exercise) {
+        const queryOnName = { $text: { $eq: exercise.name.trim().toLower() } };
 
+        if (!this.exercisesHaveBeenLoaded()) {
+            this.allExercises = await Exercise.find({});
+        }
+        const searchResults = await this.allExercises.find(queryOnName);
+        const exerciseMatchingNameAlreadyExists = searchResults.length > 0;
+
+        return exerciseMatchingNameAlreadyExists;
+    }
+
+    async addExercise(exercise) {   
+        const alreadyExists = await this.exerciseAlreadyExists(exercise); 
+        if (alreadyExists) {
+            return {
+                alreadyExists: true,
+                message: `${exercise.name} already exists. Could not create exercise.`
+            };
+        }
+        try {
             const newExercise = new Exercise({
                 _id: new mongoose.Types.ObjectId(),
                 name: exercise.name,
                 focus: exercise.focus,
-                difficulty: exercise.difficulty,
+                difficulty: exercise.difficulty
             });
             return await Exercise.create(newExercise);    
         } catch (error) {
             console.error(`Could not create an exercise for ${exercise.name}. Error: ${error}`);
         }
+    }
+
+    exercisesHaveBeenLoaded() {
+        return this.allExercises.length > 0;
     }
 }

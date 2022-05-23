@@ -14,7 +14,7 @@ function TrainingProgramme() {
         }
     })
 
-    // issue 1: too many requests
+    // issue 1: too many requests   
     async function getTrainingProgramme() {
         const provider = new ExercisesProvider();
         const getTrainingProgrammeResponse = await provider.getTrainingProgramme(numberOfExercises);

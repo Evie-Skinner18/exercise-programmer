@@ -2,10 +2,11 @@ import express from "express";
 import ExercisesController from "./exercises.controller.js";
 
 const router = express.Router();
+const exercisesController = new ExercisesController();
 
-router.route("/search").get(ExercisesController.get);
-router.route("/random").get(ExercisesController.getRandom);
-router.route("/programme").get(ExercisesController.getProgramme);
-router.route("/").post(ExercisesController.post);
+router.route("/search").get(exercisesController.get);
+router.route("/random").get(exercisesController.getRandom);
+router.route("/programme").get(exercisesController.getProgramme);
+router.route("/").post(exercisesController.post);
 
 export default router;

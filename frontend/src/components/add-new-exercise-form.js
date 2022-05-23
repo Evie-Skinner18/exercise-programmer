@@ -5,6 +5,7 @@ import ToastMessage from "./toast-message";
 
 function AddNewExerciseForm({ addExercise }) {
     let exerciseForToastMessage = {};
+    let errorMessage = "";
     let showToastMessage = false;
     let exerciseSuccessfullyAdded = false;
 
@@ -32,6 +33,9 @@ function AddNewExerciseForm({ addExercise }) {
         if (addExerciseResponse.name) {
             exerciseSuccessfullyAdded = true;
             exerciseForToastMessage = newExercise;
+        } else if (addExerciseResponse.alreadyExists) {
+            exerciseSuccessfullyAdded = false;
+            errorMessage = addExerciseResponse.message;
         }
 
         addExercise(exerciseSuccessfullyAdded);
@@ -73,6 +77,7 @@ function AddNewExerciseForm({ addExercise }) {
             <ToastMessage 
                 exercise={ exerciseForToastMessage } 
                 isSuccessMessage={ exerciseSuccessfullyAdded } 
+                errorMessage={ errorMessage }
                 toastMessageStyles={ toastMessageStyles }>
             </ToastMessage>
         </div>

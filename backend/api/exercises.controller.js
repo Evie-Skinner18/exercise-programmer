@@ -1,29 +1,34 @@
-import ExercisesProvider from "./services/exercises.service.js";
+import ExercisesService from "./services/exercises.service.js";
 
 export default class ExercisesController {
 
-    sanitiser = expressMongoSanitize();
+    constructor() {
+        this.exercisesService = new ExercisesService();
+        this.message = "Hello";
 
-    static async get(req, res, next) {
+        console.log(this.message + " from constructor");
+    }
+
+    async get(req, res, next) {
         const exercisesPerPage = req.query.exercisesPerPage ? parseInt(req.query.exercisesPerPage, 10) : 100;
         const pageNumber = req.query.pageNumber ? parseInt(req.query.pageNumber, 10) : 0;
 
         let filters = {}
         if (req.query.focus) {
-            filters.focus = req.query.focus
+            filters.focus = req.query.focus.trim().toLower()
         } else if (req.query.difficulty) {
-            filters.difficulty = req.query.difficulty
+            filters.difficulty = req.query.difficulty.trim().toLower()
         } else if (req.query.name) {
-            filters.name = req.query.name
+            filters.name = req.query.name.trim().toLower()
         }
 
         const searchExercisesParams = { 
-            filters: filters, 
+            filters: filters,
             pageNumber: pageNumber, 
             exercisesPerPage: exercisesPerPage
         };
 
-        const exercises = await ExercisesProvider.searchExercises(searchExercisesParams);
+        const exercises = await this.exercisesService.searchExercises(searchExercisesParams);
         let response = {
             exercises: exercises,
             pageNumber: pageNumber,
@@ -35,8 +40,8 @@ export default class ExercisesController {
         res.json(response);
     }
 
-    static async getRandom(req, res, next) {
-        const randomExercise = await ExercisesProvider.getRandomExercise();
+    async getRandom(req, res, next) {
+        const randomExercise = await this.exercisesService.getRandomExercise();
         const response = {
             randomExercise: randomExercise
         }
@@ -44,9 +49,9 @@ export default class ExercisesController {
         res.json(response);
     }
 
-    static async getProgramme(req, res, next) {
+    async getProgramme(req, res, next) {
         const numberOfExercises = req.query.number ? parseInt(req.query.number) : 0;
-        const exercises = await ExercisesProvider.getRandomisedProgramme(numberOfExercises);
+        const exercises = await this.exercisesService.getRandomisedProgramme(numberOfExercises);
         const response = {
             exercises: exercises
         }
@@ -54,11 +59,11 @@ export default class ExercisesController {
         res.json(response);
     }
 
-    // does the given exercise already exist?
-    static async post(req, res, next) {
+    async post(req, res, next) {
         const exercise = req.body.exercise;
-
-        const response = await ExercisesProvider.addExercise(exercise);
+        // in strict mode (JS clsses) 'this' gets reset to undefined
+        console.log(this.message + " from POST method");
+        const response = await this.exercisesService.addExercise(exercise);
 
         res.json(response);
     }
