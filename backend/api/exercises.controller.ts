@@ -1,5 +1,7 @@
 import ExercisesService from "./services/exercises.service";
+import { IFilterOptions, SearchParameters } from "./ExerciseSearchOptions";
 import { Request, Response } from "express";
+import { IExercise } from "../models/exercise";
 
 export default class ExercisesController {
     exercisesService: ExercisesService;
@@ -8,14 +10,11 @@ export default class ExercisesController {
         this.exercisesService = new ExercisesService();
     }
 
-    // might need to return Promise<Response>
-    // make a type for Filters
-    // TS-ify the service
     async get(req: Request, res: Response): Promise<void> {
         const exercisesPerPage = req.query.exercisesPerPage ? parseInt(req.query.exercisesPerPage as string, 10) : 100;
         const pageNumber = req.query.pageNumber ? parseInt(req.query.pageNumber as string, 10) : 0;
 
-        let filters = {}
+        let filters: IFilterOptions = {};
         if (req.query.focus) {
             filters.focus = (req.query.focus as string).trim().toLowerCase()
         } else if (req.query.difficulty) {
@@ -24,11 +23,7 @@ export default class ExercisesController {
             filters.name = (req.query.name as string).trim().toLowerCase()
         }
 
-        const searchExercisesParams = { 
-            filters: filters,
-            pageNumber: pageNumber, 
-            exercisesPerPage: exercisesPerPage
-        };
+        const searchExercisesParams = new SearchParameters(filters, pageNumber, exercisesPerPage);
 
         const exercises = await this.exercisesService.searchExercises(searchExercisesParams);
         let response = {
@@ -51,6 +46,7 @@ export default class ExercisesController {
         res.json(response);
     }
 
+    // make igetprogrammeresponse
     async getProgramme(req: Request, res: Response): Promise<void> {
         const numberOfExercises = req.query.number ? parseInt(req.query.number as string) : 0;
         const exercises = await this.exercisesService.getRandomisedProgramme(numberOfExercises);
@@ -62,7 +58,7 @@ export default class ExercisesController {
     }
 
     async post(req: Request, res: Response): Promise<void> {
-        const exercise = req.body.exercise;
+        const exercise: IExercise = req.body.exercise; // will this work with IExercise if there's no _id going in?
         const response = await this.exercisesService.addExercise(exercise);
 
         res.json(response);

@@ -1,41 +1,31 @@
-import { Exercise } from "../../models/exercise.js";
-import ExerciseRandomiser from "../../utils/exercise.randomiser.js";
+import { IExercise, Exercise } from "../../models/exercise";
+import { SearchParameters } from "../ExerciseSearchOptions";
+import ExerciseRandomiser from "../../utils/exercise.randomiser";
 import mongoose from "mongoose";
 
 // how do I get the total no available?
 export default class ExercisesService {
-    constructor() {
-        this.allExercises = Exercise.find({});
-    }    
 
-    async searchExercises({
-        filters = null,
-        pageNumber = 0,
-        exercisesPerPage = 0
-    } = {}) {
+    async searchExercises(searchExercisesParams: SearchParameters) {
 
-        let exercises = [];
+        let exercises: IExercise[] = [];
 
         try {
-            let query
+            let query: mongoose.FilterQuery<IExercise> = {};
 
-            if (filters) {
-                if ("name" in filters) {
-                    query = { $text: { $search: filters["name"] } }
-                } else if ("difficulty" in filters) {
-                    query = { "difficulty": { $eq: filters["difficulty"] } }
-                } else if ("focus" in filters) {
-                    query = { "focus": { $eq: filters["focus"] } }
+            if (searchExercisesParams.filters) {
+                if ("name" in searchExercisesParams.filters) {
+                    query = { $text: { $search: searchExercisesParams.filters.name as string } }
+                } else if ("difficulty" in searchExercisesParams.filters) {
+                    query = { "difficulty": { $eq: searchExercisesParams.filters.difficulty } }
+                } else if ("focus" in searchExercisesParams.filters) {
+                    query = { "focus": { $eq: searchExercisesParams.filters.focus } }
                 }
             }
 
-            if (!this.exercisesHaveBeenLoaded()) {
-                this.allExercises = await Exercise.find({});
-            }
-
-            exercises = await this.allExercises.find(query)
-            .limit(exercisesPerPage)
-            .skip(exercisesPerPage * pageNumber);
+            exercises = await Exercise.find(query)
+            .limit(searchExercisesParams.exercisesPerPage)
+            .skip(searchExercisesParams.exercisesPerPage * searchExercisesParams.pageNumber);
         } catch (error) {
             console.error(`Unable to find exercises. Error:${error}`);
             return exercises;
@@ -44,13 +34,11 @@ export default class ExercisesService {
         return exercises;
     }
 
-    async getRandomExercise() {
-        let randomExercise = new Exercise();
+    async getRandomExercise(): Promise<IExercise> {
+        let randomExercise: IExercise = new Exercise();
         try {
-            if (!this.exercisesHaveBeenLoaded()) {
-                this.allExercises = await Exercise.find({});
-            }
-            randomExercise = ExerciseRandomiser.getRandomisedExerciseProgramme(this.allExercises, 1)[0];    
+            const allExercises = await Exercise.find({});
+            randomExercise = ExerciseRandomiser.getRandomisedExerciseProgramme(allExercises, 1)[0];    
         } catch (error) {
             console.error(`Unable to get random exercise. Error: ${error}`);
         }
@@ -58,13 +46,11 @@ export default class ExercisesService {
         return randomExercise;
     }
 
-    async getRandomisedProgramme(numberOfExercises) {
-        let randomExercises = [];
+    async getRandomisedProgramme(numberOfExercises: number): Promise<IExercise[]> {
+        let randomExercises: IExercise[] = [];
         try {
-            if (!this.exercisesHaveBeenLoaded()) {
-                this.allExercises = await Exercise.find({});
-            }
-            randomExercises = ExerciseRandomiser.getRandomisedExerciseProgramme(this.allExercises, numberOfExercises);    
+            const allExercises = await Exercise.find({});
+            randomExercises = ExerciseRandomiser.getRandomisedExerciseProgramme(allExercises, numberOfExercises);    
         } catch (error) {
             console.error(`Unable to get exercise programme. Error: ${error}`);
         }
@@ -72,40 +58,51 @@ export default class ExercisesService {
         return randomExercises;
     }
 
-    async exerciseAlreadyExists(exercise) {
-        const queryOnName = { $text: { $eq: exercise.name.trim().toLower() } };
+    async exerciseAlreadyExists(exercise: IExercise): Promise<boolean> {
+        const searchResults = await Exercise.find({})
+            .where("name".trim().toLowerCase())
+            .equals(exercise.name.trim().toLowerCase());
 
-        if (!this.exercisesHaveBeenLoaded()) {
-            this.allExercises = await Exercise.find({});
-        }
-        const searchResults = await this.allExercises.find(queryOnName);
         const exerciseMatchingNameAlreadyExists = searchResults.length > 0;
-
         return exerciseMatchingNameAlreadyExists;
     }
 
-    async addExercise(exercise) {   
-        const alreadyExists = await this.exerciseAlreadyExists(exercise); 
+    async addExercise(exerciseToCreate: IExercise): Promise<IAddExerciseResponse> { 
+        let addExerciseResponse: IAddExerciseResponse = {
+            alreadyExists: false,
+            created: false
+        };
+
+        const alreadyExists = await this.exerciseAlreadyExists(exerciseToCreate);
+
         if (alreadyExists) {
-            return {
-                alreadyExists: true,
-                message: `${exercise.name} already exists. Could not create exercise.`
-            };
+            addExerciseResponse.alreadyExists = true;
+            addExerciseResponse.message = `${exerciseToCreate.name} already exists. Could not create exercise.`;
+            addExerciseResponse.created = false;
         }
         try {
-            const newExercise = new Exercise({
+            // do I still need this?
+            const newExercise: IExercise = new Exercise({
                 _id: new mongoose.Types.ObjectId(),
-                name: exercise.name,
-                focus: exercise.focus,
-                difficulty: exercise.difficulty
+                name: exerciseToCreate.name,
+                focus: exerciseToCreate.focus,
+                difficulty: exerciseToCreate.difficulty
             });
-            return await Exercise.create(newExercise);    
+            const exercise = await Exercise.create(newExercise);
+            addExerciseResponse.alreadyExists = false;
+            addExerciseResponse.exercise = exercise;
+            addExerciseResponse.created = true;
         } catch (error) {
-            console.error(`Could not create an exercise for ${exercise.name}. Error: ${error}`);
+            console.error(`Could not create an exercise for ${exerciseToCreate.name}. Error: ${error}`);
         }
-    }
 
-    exercisesHaveBeenLoaded() {
-        return this.allExercises.length > 0;
+        return addExerciseResponse;
     }
+}
+
+interface IAddExerciseResponse {
+    alreadyExists: boolean;
+    message?: string;
+    created: boolean;
+    exercise?: IExercise;
 }
