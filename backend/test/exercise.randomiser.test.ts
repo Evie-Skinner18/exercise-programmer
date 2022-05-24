@@ -1,6 +1,6 @@
 import assert from "assert";
-import { Exercise } from "../models/exercise.js";
-import ExerciseRandomiser from "../utils/exercise.randomiser.js";
+import { Exercise } from "../models/exercise";
+import ExerciseRandomiser from "../utils/exercise.randomiser";
 
 describe('ExerciseRandomiser', function () {
   describe('getRandomisedExerciseProgramme()', function () {
@@ -56,5 +56,4 @@ describe('ExerciseRandomiser', function () {
         assert.equal(randomisedExerciseProgramme.length, exercisesToPickFrom.length);
     });
   });
-
 });

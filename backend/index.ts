@@ -1,4 +1,4 @@
-import app from "./server.js";
+import app from "./server";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
@@ -26,13 +26,12 @@ console.log(`Port is ${port}`);
 
   async function connectMongoClient() {
     try {
-      await mongoose.connect(process.env.MONGO_DB_CONNECTION_STRING, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-      });
+      // appaz Mongoose no longer needs useNewUrlParser
+      await mongoose.connect(process.env.MONGO_DB_CONNECTION_STRING as string);
       console.log("Connected successfully to db server");
     } catch(error) {
-      dbConnectionError = error.message;
+      const dbError = error as Error;
+      dbConnectionError = dbError.message;
       console.error(dbConnectionError);
     }
   }

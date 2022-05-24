@@ -1,18 +1,17 @@
-import express from "express";
-
+import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import expressMongoSanitize from "express-mongo-sanitize";
 import xssClean from "xss-clean";
 import hpp from "hpp";
 import { rateLimit } from "express-rate-limit";
 import helmet from "helmet";
-
 import dotenv from "dotenv";
-import exercises from "./api/exercises.route.js";
+import exercises from "./api/exercises.route";
+
+const app: Application = express();
 
 dotenv.config();
 
-const app = express();
 app.use(express.json());
 
 // security precautions
@@ -29,7 +28,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 const timeLimit = 10 * 60 * 1000;
-const maxNumberOfRequestsAllowed = 100;
+const maxNumberOfRequestsAllowed = 600;
 
 const rateLimiter = rateLimit({
   windowMs: timeLimit,

@@ -14,10 +14,11 @@ function TrainingProgramme() {
         }
     })
 
+    // issue 1: too many requests   
     async function getTrainingProgramme() {
         const provider = new ExercisesProvider();
         const getTrainingProgrammeResponse = await provider.getTrainingProgramme(numberOfExercises);
-        setTrainingProgramme(getTrainingProgrammeResponse.exercises);
+        setTrainingProgramme(getTrainingProgrammeResponse.randomExercises);
     }
 
     if(randomExerciseList.length > 0) {

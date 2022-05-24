@@ -1,9 +1,9 @@
-// import { Exercise } from "../models/exercise.js";
-// import that later on if you want to influence the random selection with focus, difficulty etc
+import { IExercise } from "../models/exercise";
+// might want to influence the random selection with focus, difficulty etc
 
 export default class ExerciseRandomiser {
 
-    static getRandomisedExerciseProgramme(exercisesToPickFrom, amountForProgramme) {
+    public static getRandomisedExerciseProgramme(exercisesToPickFrom: IExercise[], amountForProgramme: Number) {
         let randomisedExercises = [];
         
         if(exercisesToPickFrom && exercisesToPickFrom.length > 0 
@@ -12,7 +12,7 @@ export default class ExerciseRandomiser {
             const noAmountSpecified = amountForProgramme == 0 || !amountForProgramme;
             amountForProgramme = noAmountSpecified ? exercisesToPickFrom.length : amountForProgramme;
             
-            let randomNumbersAlreadyUsed = [];
+            let randomNumbersAlreadyUsed: Number[] = [];
             for (let i = 0; i < amountForProgramme; i++) {
                 let randomNumber = this.getRandomNumber(exercisesToPickFrom.length);
 
@@ -29,7 +29,7 @@ export default class ExerciseRandomiser {
         return randomisedExercises;
     }
 
-    static getRandomNumber(maxValue) {
+    private static getRandomNumber(maxValue: number) {
         return Math.floor(Math.random() * maxValue);
     }
 }
