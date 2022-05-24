@@ -2,11 +2,11 @@ import { HttpClient } from "./http-client";
 import Sanitiser from "../utils/sanitiser";
 
 export default class ExercisesProvider {
-    async getExercises(numberToReturn){
+    async getExercises(pageNumber){
         const axiosClient = await HttpClient.axiosClient();
         
         let getExercisesResponse = {};
-        const response = await axiosClient.get("exercises/search");
+        const response = await axiosClient.get(`exercises/search?pageNumber=${pageNumber}`);
 
         if (response.data) {
             getExercisesResponse = response.data;

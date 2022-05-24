@@ -18,7 +18,7 @@ function TrainingProgrammeForm() {
         console.log(numberOfExercisesAvailable);
         const provider = new ExercisesProvider();
         const getExercisesResponse = await provider.getExercises();
-        setNumberAvailable(getExercisesResponse.exercises.length);
+        setNumberAvailable(getExercisesResponse.totalNumberAvailable);
     }
 
     const { register, handleSubmit, formState: { errors, isValid } } = useForm({

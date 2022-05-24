@@ -9,6 +9,8 @@
 - React Router
 - TailwindCSS
 - FontAwesome icons
+- JavaScript
+- TypeScript
 - Mongo DB Atlas
 - Express
 - Node
@@ -16,4 +18,5 @@
 
 # How to Run the App
 - Frontend: npm start
-- API: nodemon server
+- API: npm run server
+- Tests: npm run test

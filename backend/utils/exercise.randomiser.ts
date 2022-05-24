@@ -3,7 +3,7 @@ import { IExercise } from "../models/exercise";
 
 export default class ExerciseRandomiser {
 
-    static getRandomisedExerciseProgramme(exercisesToPickFrom: IExercise[], amountForProgramme: Number) {
+    public static getRandomisedExerciseProgramme(exercisesToPickFrom: IExercise[], amountForProgramme: Number) {
         let randomisedExercises = [];
         
         if(exercisesToPickFrom && exercisesToPickFrom.length > 0 
@@ -29,7 +29,7 @@ export default class ExerciseRandomiser {
         return randomisedExercises;
     }
 
-    static getRandomNumber(maxValue: number) {
+    private static getRandomNumber(maxValue: number) {
         return Math.floor(Math.random() * maxValue);
     }
 }

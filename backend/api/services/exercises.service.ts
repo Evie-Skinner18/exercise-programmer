@@ -1,14 +1,15 @@
 import { IExercise, Exercise } from "../../models/exercise";
-import { SearchParameters } from "../ExerciseSearchOptions";
+import { IFilterOptions, SearchParameters } from "../ExerciseSearchOptions";
 import ExerciseRandomiser from "../../utils/exercise.randomiser";
 import mongoose from "mongoose";
 
-// how do I get the total no available?
 export default class ExercisesService {
 
-    async searchExercises(searchExercisesParams: SearchParameters) {
+    public async searchExercises(searchExercisesParams: SearchParameters): Promise<ISearchExercisesResponse> {
 
-        let exercises: IExercise[] = [];
+        let searchExercisesResponse: ISearchExercisesResponse = {
+            exercises: []
+        };
 
         try {
             let query: mongoose.FilterQuery<IExercise> = {};
@@ -23,51 +24,55 @@ export default class ExercisesService {
                 }
             }
 
-            exercises = await Exercise.find(query)
-            .limit(searchExercisesParams.exercisesPerPage)
-            .skip(searchExercisesParams.exercisesPerPage * searchExercisesParams.pageNumber);
+            searchExercisesResponse.exercises = await Exercise.find(query)
+                .limit(searchExercisesParams.exercisesPerPage)
+                .skip(searchExercisesParams.exercisesPerPage * searchExercisesParams.pageNumber);
+
+            searchExercisesResponse.totalNumberAvailable = await Exercise.countDocuments();
+            searchExercisesResponse.exercisesPerPage = searchExercisesParams.exercisesPerPage;
+            searchExercisesResponse.pageNumber = searchExercisesParams.pageNumber;
+            searchExercisesResponse.totalNumberOfPages = Math.ceil(
+                searchExercisesResponse.totalNumberAvailable / searchExercisesParams.exercisesPerPage
+            );
         } catch (error) {
             console.error(`Unable to find exercises. Error:${error}`);
-            return exercises;
+            return searchExercisesResponse;
         }
 
-        return exercises;
+        return searchExercisesResponse;
     }
 
-    async getRandomExercise(): Promise<IExercise> {
-        let randomExercise: IExercise = new Exercise();
+    public async getRandomExercise(): Promise<IRandomExerciseResponse> {
+        let randomExerciseResponse: IRandomExerciseResponse = {
+            randomExercise: new Exercise()
+        };
+
         try {
             const allExercises = await Exercise.find({});
-            randomExercise = ExerciseRandomiser.getRandomisedExerciseProgramme(allExercises, 1)[0];    
+            randomExerciseResponse.randomExercise = ExerciseRandomiser.getRandomisedExerciseProgramme(allExercises, 1)[0];    
         } catch (error) {
             console.error(`Unable to get random exercise. Error: ${error}`);
         }
 
-        return randomExercise;
+        return randomExerciseResponse;
     }
 
-    async getRandomisedProgramme(numberOfExercises: number): Promise<IExercise[]> {
-        let randomExercises: IExercise[] = [];
+    public async getRandomisedProgramme(numberOfExercises: number): Promise<IRandomisedProgrammeResponse> {
+        let randomisedProgrammeResponse: IRandomisedProgrammeResponse = {
+            randomExercises: []
+        };
+
         try {
             const allExercises = await Exercise.find({});
-            randomExercises = ExerciseRandomiser.getRandomisedExerciseProgramme(allExercises, numberOfExercises);    
+            randomisedProgrammeResponse.randomExercises = ExerciseRandomiser.getRandomisedExerciseProgramme(allExercises, numberOfExercises);    
         } catch (error) {
             console.error(`Unable to get exercise programme. Error: ${error}`);
         }
 
-        return randomExercises;
+        return randomisedProgrammeResponse;
     }
 
-    async exerciseAlreadyExists(exercise: IExercise): Promise<boolean> {
-        const searchResults = await Exercise.find({})
-            .where("name".trim().toLowerCase())
-            .equals(exercise.name.trim().toLowerCase());
-
-        const exerciseMatchingNameAlreadyExists = searchResults.length > 0;
-        return exerciseMatchingNameAlreadyExists;
-    }
-
-    async addExercise(exerciseToCreate: IExercise): Promise<IAddExerciseResponse> { 
+    public async addExercise(exerciseToCreate: IExercise): Promise<IAddExerciseResponse> { 
         let addExerciseResponse: IAddExerciseResponse = {
             alreadyExists: false,
             created: false
@@ -79,8 +84,7 @@ export default class ExercisesService {
             addExerciseResponse.alreadyExists = true;
             addExerciseResponse.message = `${exerciseToCreate.name} already exists. Could not create exercise.`;
             addExerciseResponse.created = false;
-        }
-        try {
+        } else {
             // do I still need this?
             const newExercise: IExercise = new Exercise({
                 _id: new mongoose.Types.ObjectId(),
@@ -92,12 +96,37 @@ export default class ExercisesService {
             addExerciseResponse.alreadyExists = false;
             addExerciseResponse.exercise = exercise;
             addExerciseResponse.created = true;
-        } catch (error) {
-            console.error(`Could not create an exercise for ${exerciseToCreate.name}. Error: ${error}`);
         }
 
         return addExerciseResponse;
     }
+
+    private async exerciseAlreadyExists(exercise: IExercise): Promise<boolean> {
+        const searchResults = await Exercise.find({name: {
+            $regex: `^${exercise.name.trim().toLowerCase()}$`, 
+            $options: 'i'
+        }});          
+
+        const exerciseMatchingNameAlreadyExists = searchResults.length > 0;
+        return exerciseMatchingNameAlreadyExists;
+    }
+}
+
+interface ISearchExercisesResponse {
+    exercises: IExercise[];
+    totalNumberAvailable?: number;
+    pageNumber?: number;
+    filters?: IFilterOptions;
+    exercisesPerPage?: number;
+    totalNumberOfPages?: number;
+}
+
+interface IRandomisedProgrammeResponse {
+    randomExercises: IExercise[]
+}
+
+interface IRandomExerciseResponse {
+    randomExercise: IExercise
 }
 
 interface IAddExerciseResponse {

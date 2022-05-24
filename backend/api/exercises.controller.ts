@@ -10,8 +10,8 @@ export default class ExercisesController {
         this.exercisesService = new ExercisesService();
     }
 
-    async get(req: Request, res: Response): Promise<void> {
-        const exercisesPerPage = req.query.exercisesPerPage ? parseInt(req.query.exercisesPerPage as string, 10) : 100;
+    public async get(req: Request, res: Response): Promise<void> {
+        const exercisesPerPage = req.query.exercisesPerPage ? parseInt(req.query.exercisesPerPage as string, 10) : 30;
         const pageNumber = req.query.pageNumber ? parseInt(req.query.pageNumber as string, 10) : 0;
 
         let filters: IFilterOptions = {};
@@ -25,39 +25,25 @@ export default class ExercisesController {
 
         const searchExercisesParams = new SearchParameters(filters, pageNumber, exercisesPerPage);
 
-        const exercises = await this.exercisesService.searchExercises(searchExercisesParams);
-        let response = {
-            exercises: exercises,
-            pageNumber: pageNumber,
-            filters: filters,
-            exercisesPerPage: exercisesPerPage,
-            // totalNumberAvailable
-        }
+        const response = await this.exercisesService.searchExercises(searchExercisesParams);
+       
+        res.json(response);
+    }
+
+    public async getRandom(req: Request, res: Response): Promise<void> {
+        const response = await this.exercisesService.getRandomExercise();
 
         res.json(response);
     }
 
-    async getRandom(req: Request, res: Response): Promise<void> {
-        const randomExercise = await this.exercisesService.getRandomExercise();
-        const response = {
-            randomExercise: randomExercise
-        }
-
-        res.json(response);
-    }
-
-    // make igetprogrammeresponse
-    async getProgramme(req: Request, res: Response): Promise<void> {
+    public async getProgramme(req: Request, res: Response): Promise<void> {
         const numberOfExercises = req.query.number ? parseInt(req.query.number as string) : 0;
-        const exercises = await this.exercisesService.getRandomisedProgramme(numberOfExercises);
-        const response = {
-            exercises: exercises
-        }
+        const response = await this.exercisesService.getRandomisedProgramme(numberOfExercises);
 
         res.json(response);
     }
 
-    async post(req: Request, res: Response): Promise<void> {
+    public async post(req: Request, res: Response): Promise<void> {
         const exercise: IExercise = req.body.exercise; // will this work with IExercise if there's no _id going in?
         const response = await this.exercisesService.addExercise(exercise);
 
