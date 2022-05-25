@@ -12,16 +12,15 @@ const ExerciseList = props => {
     // fill an array with the numbers of numberOfPages
     const pages = new Array(numberOfPages).fill(null).map((v, i) => i);
 
-
     useEffect(() => {
         if (exerciseList.length === 0) {
-            getExerciseList();
+            getExerciseList(0);
         }
     })
 
-    async function getExerciseList() {
+    async function getExerciseList(desiredPageNumber) {
         const provider = new ExercisesProvider();
-        const getExercisesResponse = await provider.getExercises(pageNumber);
+        const getExercisesResponse = await provider.getExercises(desiredPageNumber);
         setExerciseList(getExercisesResponse.exercises);
         setNumberOfPages(getExercisesResponse.totalNumberOfPages);
     }
@@ -37,34 +36,45 @@ const ExerciseList = props => {
     }
 
     const goToPreviousPage = () => {
-        setPageNumber(Math.max(0, pageNumber - 1));
-        getExerciseList();
+        const previousPage = pageNumber - 1;
+        if (previousPage >= 0) {
+            setPageNumber(previousPage);
+            getExerciseList(previousPage);    
+        }
       };
     
-      const goToNextPage = () => {
-        setPageNumber(Math.min(numberOfPages - 1, pageNumber + 1));
-        getExerciseList();
-      };
+    const goToNextPage = () => {
+        const nextPage = pageNumber + 1;
+        if (nextPage < numberOfPages) {
+            setPageNumber(nextPage);
+            getExerciseList(nextPage);    
+        }
+    };
+
+    const goToPage = (pageIndex) => {
+        setPageNumber(pageIndex);
+        getExerciseList(pageIndex);    
+    }
 
     if(exerciseList.length > 0) {
         return (
             <div className="exercise-list p-16">
                 <h2 className="text-green-700">All exercises</h2>
-                <h3>Page {pageNumber + 1} of { numberOfPages } </h3>
-                <span onClick={ showForm }>
-                    <i className="fa-solid fa-add"></i>Add new
-                </span>
-                { addExerciseForm }
-                { exerciseList.map((exercise, index) => (
-                    <Exercise exercise={exercise} key={exercise._id}></Exercise>
-                ))}
+                <h3>Page { pageNumber + 1} of { numberOfPages } </h3>
                 <button onClick={ goToPreviousPage }>Previous</button>
                 {pages.map((pageIndex) => (
-                    <button key={pageIndex} onClick={() => setPageNumber(pageIndex)}>
+                    <button key={pageIndex} onClick={() => goToPage(pageIndex)}>
                     {pageIndex + 1}
                     </button>
                 ))}
                 <button onClick={ goToNextPage }>Next</button>
+                <div onClick={ showForm }>
+                    <i className="fa-solid fa-add"></i>Add new
+                </div>
+                { addExerciseForm }
+                { exerciseList.map((exercise, index) => (
+                    <Exercise exercise={exercise} showHeaders={false} key={exercise._id}></Exercise>
+                ))}
             </div>
         );    
     } else {
