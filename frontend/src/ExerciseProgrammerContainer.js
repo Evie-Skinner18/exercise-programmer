@@ -3,7 +3,7 @@ import './App.css';
 
 function ExerciseProgrammerContainer() {
   return (
-    <div className="exercise-programmer-container">
+    <div className="exercise-programmer-container mobile:pl-30 tablet:pl-0 laptop:pl-0">
         <header className="App-header">
             <h1 className="text-green-200">Welcome to Exercise Programmer!</h1>
             <button className="border-solid rounded-full">
