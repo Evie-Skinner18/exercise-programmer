@@ -15,6 +15,19 @@ export default class ExercisesProvider {
         return getExercisesResponse;
     }
 
+    async getRandomExercise(){
+        const axiosClient = await HttpClient.axiosClient();
+        
+        let getRandomExerciseResponse = {};
+        const response = await axiosClient.get("exercises/random");
+
+        if (response.data) {
+            getRandomExerciseResponse = response.data;
+        }
+
+        return getRandomExerciseResponse;
+    }
+
     async getTrainingProgramme(numberOfExercises){
         const axiosClient = await HttpClient.axiosClient();
         
@@ -45,4 +58,6 @@ export default class ExercisesProvider {
 
         return addExerciseResponse;
     }
+
+    
 }

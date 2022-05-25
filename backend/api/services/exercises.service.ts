@@ -26,7 +26,8 @@ export default class ExercisesService {
 
             searchExercisesResponse.exercises = await Exercise.find(query)
                 .limit(searchExercisesParams.exercisesPerPage)
-                .skip(searchExercisesParams.exercisesPerPage * searchExercisesParams.pageNumber);
+                .skip(searchExercisesParams.exercisesPerPage * searchExercisesParams.pageNumber)
+                .sort({ dateAdded: "desc" });
 
             searchExercisesResponse.totalNumberAvailable = await Exercise.countDocuments();
             searchExercisesResponse.exercisesPerPage = searchExercisesParams.exercisesPerPage;
@@ -90,7 +91,8 @@ export default class ExercisesService {
                 _id: new mongoose.Types.ObjectId(),
                 name: exerciseToCreate.name,
                 focus: exerciseToCreate.focus,
-                difficulty: exerciseToCreate.difficulty
+                difficulty: exerciseToCreate.difficulty,
+                dateAdded: new Date()
             });
             const exercise = await Exercise.create(newExercise);
             addExerciseResponse.alreadyExists = false;
