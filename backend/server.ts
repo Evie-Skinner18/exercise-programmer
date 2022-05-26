@@ -11,7 +11,6 @@ import exercises from "./api/exercises.route";
 const app: Application = express();
 
 if (process.env.NODE_ENV !== "production") {
-  console.log(process.env.NODE_ENV);
   dotenv.config();
 }
 
