@@ -21,9 +21,9 @@ function TrainingProgramme() {
     if(randomExerciseList.length > 0) {
         return (
             <div className="exercise-list p-16">
-                <h2 className="text-green-700">Enjoy your randomised training programme!</h2>
+                <h2 className="text-green-700 pb-5">Enjoy your randomised training programme!</h2>
                 { randomExerciseList.map((exercise, index) => (
-                    <Exercise exercise={exercise} key={exercise._id}></Exercise>
+                    <Exercise exercise={exercise} showHeaders={true} key={exercise._id}></Exercise>
                 ))}
             </div>
         );    

@@ -3,8 +3,8 @@ import './App.css';
 
 function ExerciseProgrammerContainer() {
   return (
-    <div className="exercise-programmer-container mobile:pl-30 tablet:pl-0 laptop:pl-0">
-        <header className="App-header">
+    <div className="exercise-programmer-container">
+        <header className="App-header mobile:pl-10">
             <h1 className="text-green-200">Welcome to Exercise Programmer!</h1>
             <button className="border-solid rounded-full">
               <Link to={"/random-exercise"} className="text-slate-200">Give me a random exercise</Link>

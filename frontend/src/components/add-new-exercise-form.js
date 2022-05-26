@@ -14,7 +14,6 @@ function AddNewExerciseForm({ addExercise }) {
     }, [exerciseForToast, errorMessageForToast, showToastMessage, exerciseSuccessfullyAdded]);
 
     function setupToastMessage(exercise, errorMessage, show, successfullyAdded) {
-        console.log("Resetting toast")
         setExerciseForToast(exercise);
         setErrorMessageForToast(errorMessage);
         setShowToastMessage(show);
@@ -53,7 +52,6 @@ function AddNewExerciseForm({ addExercise }) {
     }
 
     function autoDismissToastMessage(timeLimit) {
-        console.log("Dismissing toast");
         const interval = setInterval(() => {
             setupToastMessage({}, "", false, false);
         }, timeLimit);
@@ -62,7 +60,7 @@ function AddNewExerciseForm({ addExercise }) {
     }
 
     return (
-        <div className="add-exercise-form p-16">
+        <div className="add-exercise-form mobile:p-1">
             <form onSubmit={ handleSubmit(submitNewExercise) }>
                 <input
                     placeholder="Exercise name"

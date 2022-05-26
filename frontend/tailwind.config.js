@@ -7,7 +7,7 @@ module.exports = {
       }
     },
     screens: {
-      'mobile': '360px',
+      'mobile': '330px',
       // min-width 393px
       'tablet': '640px',
       // => @media (min-width: 640px) { ... }
