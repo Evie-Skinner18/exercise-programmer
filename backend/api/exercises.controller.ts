@@ -11,7 +11,7 @@ export default class ExercisesController {
     }
 
     public async get(req: Request, res: Response): Promise<void> {
-        const exercisesPerPage = req.query.exercisesPerPage ? parseInt(req.query.exercisesPerPage as string, 10) : 30;
+        const exercisesPerPage = req.query.exercisesPerPage ? parseInt(req.query.exercisesPerPage as string, 10) : 10;
         const pageNumber = req.query.pageNumber ? parseInt(req.query.pageNumber as string, 10) : 0;
 
         let filters: IFilterOptions = {};

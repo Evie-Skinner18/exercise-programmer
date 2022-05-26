@@ -8,17 +8,17 @@ function AddNewExerciseForm({ addExercise }) {
     const [ exerciseForToast, setExerciseForToast ] = useState({});
     const [ errorMessageForToast, setErrorMessageForToast ] = useState("");
     const [ showToastMessage, setShowToastMessage ] = useState(false);
-
-    let exerciseSuccessfullyAdded = false;
+    const [ exerciseSuccessfullyAdded, setExerciseSuccessfullyAdded ] = useState(false);
 
     useEffect(() => {
-        setupToastMessage(exerciseForToast, errorMessageForToast, showToastMessage);
-    }, [exerciseForToast, errorMessageForToast, showToastMessage]);
+    }, [exerciseForToast, errorMessageForToast, showToastMessage, exerciseSuccessfullyAdded]);
 
-    function setupToastMessage(exercise, errorMessage, show) {
+    function setupToastMessage(exercise, errorMessage, show, successfullyAdded) {
+        console.log("Resetting toast")
         setExerciseForToast(exercise);
         setErrorMessageForToast(errorMessage);
         setShowToastMessage(show);
+        setExerciseSuccessfullyAdded(successfullyAdded);
     }
 
     const { register, handleSubmit, formState: { errors, isValid } } = useForm({
@@ -43,15 +43,22 @@ function AddNewExerciseForm({ addExercise }) {
         const addExerciseResponse = await provider.addExercise(exerciseRequestBody);
 
         if (addExerciseResponse.created) {
-            exerciseSuccessfullyAdded = true;
-            setExerciseForToast(newExercise);
+            setupToastMessage(addExerciseResponse.exercise, undefined, true, true);
         } else if (addExerciseResponse.alreadyExists) {
-            exerciseSuccessfullyAdded = false;
-            setErrorMessageForToast(addExerciseResponse.message);
+            setupToastMessage(newExercise, addExerciseResponse.message, true, false);
         }
 
-        setShowToastMessage(true);
         addExercise(exerciseSuccessfullyAdded);
+        autoDismissToastMessage(2);
+    }
+
+    function autoDismissToastMessage(timeLimit) {
+        console.log("Dismissing toast");
+        const interval = setInterval(() => {
+            setupToastMessage({}, "", false, false);
+        }, timeLimit);
+
+        clearInterval(interval);
     }
 
     return (
@@ -83,7 +90,7 @@ function AddNewExerciseForm({ addExercise }) {
                 { errors.difficulty && <p className="text-red-500">Please enter a difficulty number out of 5 for this exercise</p> }
                 <button 
                     disabled={ !isValid }
-                    className={ addButtonTailwindClasses     }>
+                    className={ addButtonTailwindClasses }>
                     Add
                 </button>
             </form>
