@@ -1,4 +1,4 @@
-import express, { Application, Request, Response } from "express";
+import express, { Application } from "express";
 import cors from "cors";
 import expressMongoSanitize from "express-mongo-sanitize";
 import xssClean from "xss-clean";
@@ -6,6 +6,7 @@ import hpp from "hpp";
 import { rateLimit } from "express-rate-limit";
 import helmet from "helmet";
 import dotenv from "dotenv";
+import path from "path";
 import exercises from "./api/exercises.route";
 
 const app: Application = express();
@@ -42,5 +43,11 @@ app.use(rateLimiter);
 // defining router
 app.use("/api/exercises", exercises);
 app.use("*", (req, res) => res.status(404).json({ error: "not found" }));
+
+// using static React assets for production
+app.use(express.static(path.join(__dirname,"build")));
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+})
 
 export default app
