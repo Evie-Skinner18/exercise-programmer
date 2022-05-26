@@ -1,6 +1,7 @@
 import '../App.css';
 
 // ToastMessageOptions object
+// add onClick to make message disappear
 function ToastMessage({ exercise, isSuccessMessage, errorMessage, toastMessageStyles }) {
   if (isSuccessMessage){
     return (

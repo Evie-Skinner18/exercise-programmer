@@ -1,13 +1,25 @@
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import '../App.css';
 import ExercisesProvider from '../providers/exercises-provider';
 import ToastMessage from "./toast-message";
 
 function AddNewExerciseForm({ addExercise }) {
-    let exerciseForToastMessage = {};
-    let errorMessage = "";
-    let showToastMessage = false;
+    const [ exerciseForToast, setExerciseForToast ] = useState({});
+    const [ errorMessageForToast, setErrorMessageForToast ] = useState("");
+    const [ showToastMessage, setShowToastMessage ] = useState(false);
+
     let exerciseSuccessfullyAdded = false;
+
+    useEffect(() => {
+        setupToastMessage(exerciseForToast, errorMessageForToast, showToastMessage);
+    }, [exerciseForToast, errorMessageForToast, showToastMessage]);
+
+    function setupToastMessage(exercise, errorMessage, show) {
+        setExerciseForToast(exercise);
+        setErrorMessageForToast(errorMessage);
+        setShowToastMessage(show);
+    }
 
     const { register, handleSubmit, formState: { errors, isValid } } = useForm({
         mode: "onChange"
@@ -20,7 +32,7 @@ function AddNewExerciseForm({ addExercise }) {
 
     let toastMessageStyles = {
         toastMessage : {
-            display : `${showToastMessage? "inline" : "none"}`
+            display : `${showToastMessage? "" : "none"}`
         }
     };
 
@@ -30,14 +42,15 @@ function AddNewExerciseForm({ addExercise }) {
         const exerciseRequestBody = { exercise: newExercise };
         const addExerciseResponse = await provider.addExercise(exerciseRequestBody);
 
-        if (addExerciseResponse.name) {
+        if (addExerciseResponse.created) {
             exerciseSuccessfullyAdded = true;
-            exerciseForToastMessage = newExercise;
+            setExerciseForToast(newExercise);
         } else if (addExerciseResponse.alreadyExists) {
             exerciseSuccessfullyAdded = false;
-            errorMessage = addExerciseResponse.message;
+            setErrorMessageForToast(addExerciseResponse.message);
         }
 
+        setShowToastMessage(true);
         addExercise(exerciseSuccessfullyAdded);
     }
 
@@ -75,9 +88,9 @@ function AddNewExerciseForm({ addExercise }) {
                 </button>
             </form>
             <ToastMessage 
-                exercise={ exerciseForToastMessage } 
+                exercise={ exerciseForToast } 
                 isSuccessMessage={ exerciseSuccessfullyAdded } 
-                errorMessage={ errorMessage }
+                errorMessage={ errorMessageForToast }
                 toastMessageStyles={ toastMessageStyles }>
             </ToastMessage>
         </div>

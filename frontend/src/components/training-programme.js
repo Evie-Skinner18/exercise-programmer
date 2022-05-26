@@ -9,12 +9,9 @@ function TrainingProgramme() {
     const [ randomExerciseList, setTrainingProgramme ] = useState([]);
 
     useEffect(() => {
-        if (randomExerciseList.length === 0) {
-            getTrainingProgramme();
-        }
-    })
+        getTrainingProgramme();
+    }, []);
 
-    // issue 1: too many requests   
     async function getTrainingProgramme() {
         const provider = new ExercisesProvider();
         const getTrainingProgrammeResponse = await provider.getTrainingProgramme(numberOfExercises);
@@ -33,7 +30,6 @@ function TrainingProgramme() {
     } else {
         return (
             <div className="exercise-list p-16">
-                <h2 className="text-orange-700">Loading super cool training programme...</h2>
             </div>
         );
     }

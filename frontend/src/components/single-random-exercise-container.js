@@ -7,10 +7,8 @@ function SingleRandomExerciseContainer() {
     const [ randomExercise, setrandomExercise ] = useState({});
 
     useEffect(() => {
-        if (!randomExercise.name) {
-            getRandomExercise();
-        }
-    });
+        getRandomExercise();
+    }, []);
 
     async function getRandomExercise() {
         const provider = new ExercisesProvider();
@@ -18,14 +16,23 @@ function SingleRandomExerciseContainer() {
         setrandomExercise(getRandomExerciseResponse.randomExercise);
     }
 
-    return (
-        <div className="single-random-exercise-container">
-            <header className="App-header">
-                <h2 className="text-red-200">Random exercise!</h2>
-                <Exercise exercise={randomExercise} showHeaders={true}></Exercise>
-            </header>
-        </div>
-    );
+    if (randomExercise.name) {
+        return (
+            <div className="single-random-exercise-container">
+                <header className="App-header">
+                    <h2 className="text-red-200">Random exercise!</h2>
+                    <Exercise exercise={randomExercise} showHeaders={true}></Exercise>
+                </header>
+            </div>
+        );
+    } else {
+        return (
+            <div className="single-random-exercise-container">
+                <header className="App-header">
+                </header>
+            </div>
+        );
+    }
 }
 
 export default SingleRandomExerciseContainer;

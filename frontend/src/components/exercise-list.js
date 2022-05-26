@@ -13,10 +13,8 @@ const ExerciseList = props => {
     const pages = new Array(numberOfPages).fill(null).map((v, i) => i);
 
     useEffect(() => {
-        if (exerciseList.length === 0) {
-            getExerciseList(0);
-        }
-    })
+        getExerciseList();
+    }, []);
 
     async function getExerciseList(desiredPageNumber) {
         const provider = new ExercisesProvider();
