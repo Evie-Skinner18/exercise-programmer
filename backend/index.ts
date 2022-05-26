@@ -26,7 +26,6 @@ console.log(`Port is ${port}`);
 
   async function connectMongoClient() {
     try {
-      // appaz Mongoose no longer needs useNewUrlParser
       await mongoose.connect(process.env.MONGO_DB_CONNECTION_STRING as string);
       console.log("Connected successfully to db server");
     } catch(error) {
