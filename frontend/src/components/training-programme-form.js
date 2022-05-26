@@ -15,7 +15,6 @@ function TrainingProgrammeForm() {
     })
 
     async function getNumberOfExercisesAvailable() {
-        console.log(numberOfExercisesAvailable);
         const provider = new ExercisesProvider();
         const getExercisesResponse = await provider.getExercises();
         setNumberAvailable(getExercisesResponse.totalNumberAvailable);

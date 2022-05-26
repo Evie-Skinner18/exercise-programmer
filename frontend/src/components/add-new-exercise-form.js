@@ -1,13 +1,24 @@
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import '../App.css';
 import ExercisesProvider from '../providers/exercises-provider';
 import ToastMessage from "./toast-message";
 
 function AddNewExerciseForm({ addExercise }) {
-    let exerciseForToastMessage = {};
-    let errorMessage = "";
-    let showToastMessage = false;
-    let exerciseSuccessfullyAdded = false;
+    const [ exerciseForToast, setExerciseForToast ] = useState({});
+    const [ errorMessageForToast, setErrorMessageForToast ] = useState("");
+    const [ showToastMessage, setShowToastMessage ] = useState(false);
+    const [ exerciseSuccessfullyAdded, setExerciseSuccessfullyAdded ] = useState(false);
+
+    useEffect(() => {
+    }, [exerciseForToast, errorMessageForToast, showToastMessage, exerciseSuccessfullyAdded]);
+
+    function setupToastMessage(exercise, errorMessage, show, successfullyAdded) {
+        setExerciseForToast(exercise);
+        setErrorMessageForToast(errorMessage);
+        setShowToastMessage(show);
+        setExerciseSuccessfullyAdded(successfullyAdded);
+    }
 
     const { register, handleSubmit, formState: { errors, isValid } } = useForm({
         mode: "onChange"
@@ -20,7 +31,7 @@ function AddNewExerciseForm({ addExercise }) {
 
     let toastMessageStyles = {
         toastMessage : {
-            display : `${showToastMessage? "inline" : "none"}`
+            display : `${showToastMessage? "" : "none"}`
         }
     };
 
@@ -30,19 +41,26 @@ function AddNewExerciseForm({ addExercise }) {
         const exerciseRequestBody = { exercise: newExercise };
         const addExerciseResponse = await provider.addExercise(exerciseRequestBody);
 
-        if (addExerciseResponse.name) {
-            exerciseSuccessfullyAdded = true;
-            exerciseForToastMessage = newExercise;
+        if (addExerciseResponse.created) {
+            setupToastMessage(addExerciseResponse.exercise, undefined, true, true);
         } else if (addExerciseResponse.alreadyExists) {
-            exerciseSuccessfullyAdded = false;
-            errorMessage = addExerciseResponse.message;
+            setupToastMessage(newExercise, addExerciseResponse.message, true, false);
         }
 
         addExercise(exerciseSuccessfullyAdded);
+        autoDismissToastMessage(2);
+    }
+
+    function autoDismissToastMessage(timeLimit) {
+        const interval = setInterval(() => {
+            setupToastMessage({}, "", false, false);
+        }, timeLimit);
+
+        clearInterval(interval);
     }
 
     return (
-        <div className="add-exercise-form p-16">
+        <div className="add-exercise-form mobile:p-1">
             <form onSubmit={ handleSubmit(submitNewExercise) }>
                 <input
                     placeholder="Exercise name"
@@ -70,14 +88,14 @@ function AddNewExerciseForm({ addExercise }) {
                 { errors.difficulty && <p className="text-red-500">Please enter a difficulty number out of 5 for this exercise</p> }
                 <button 
                     disabled={ !isValid }
-                    className={ addButtonTailwindClasses     }>
+                    className={ addButtonTailwindClasses }>
                     Add
                 </button>
             </form>
             <ToastMessage 
-                exercise={ exerciseForToastMessage } 
+                exercise={ exerciseForToast } 
                 isSuccessMessage={ exerciseSuccessfullyAdded } 
-                errorMessage={ errorMessage }
+                errorMessage={ errorMessageForToast }
                 toastMessageStyles={ toastMessageStyles }>
             </ToastMessage>
         </div>

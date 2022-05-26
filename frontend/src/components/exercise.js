@@ -4,9 +4,14 @@ function Exercise({ exercise, showHeaders }) {
   if (showHeaders) {
     return (
       <div className="exercise">
-        <h2 className="text-blue-500">Name: { exercise.name }</h2>
-        <p>Focus: { exercise.focus }</p>
-        <p>Difficulty out of 5: { exercise.difficulty }</p>
+        <h2 className="text-blue-500">
+          <strong>Name:</strong> { exercise.name }
+        </h2>
+        <p>
+          <strong>Focus:</strong> { exercise.focus }
+        </p>
+        <p><strong>Difficulty out of 5:</strong> { exercise.difficulty }</p>
+        <hr className='pb-5' />
       </div>
     );
     
@@ -16,6 +21,7 @@ function Exercise({ exercise, showHeaders }) {
       <h2 className="text-blue-500">{ exercise.name }</h2>
       <p>{ exercise.focus }</p>
       <p>{ exercise.difficulty }</p>
+      <hr className='pb-5' />
     </div>
   );
   }

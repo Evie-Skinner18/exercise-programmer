@@ -13,10 +13,8 @@ const ExerciseList = props => {
     const pages = new Array(numberOfPages).fill(null).map((v, i) => i);
 
     useEffect(() => {
-        if (exerciseList.length === 0) {
-            getExerciseList(0);
-        }
-    })
+        getExerciseList();
+    }, []);
 
     async function getExerciseList(desiredPageNumber) {
         const provider = new ExercisesProvider();
@@ -58,17 +56,22 @@ const ExerciseList = props => {
 
     if(exerciseList.length > 0) {
         return (
-            <div className="exercise-list p-16">
+            <div className="exercise-list mobile:p-16">
                 <h2 className="text-green-700">All exercises</h2>
-                <h3>Page { pageNumber + 1} of { numberOfPages } </h3>
-                <button onClick={ goToPreviousPage }>Previous</button>
-                {pages.map((pageIndex) => (
-                    <button key={pageIndex} onClick={() => goToPage(pageIndex)}>
-                    {pageIndex + 1}
-                    </button>
-                ))}
-                <button onClick={ goToNextPage }>Next</button>
-                <div onClick={ showForm }>
+                <div className='pb-5'>
+                    <h3>Page { pageNumber + 1} of { numberOfPages } </h3>
+                    <button onClick={ goToPreviousPage }>Previous</button>
+                    {pages.map((pageIndex) => (
+                        <button
+                            key={pageIndex} 
+                            onClick={() => goToPage(pageIndex)}
+                            className='p-2'>
+                        {pageIndex + 1}
+                        </button>
+                    ))}
+                    <button onClick={ goToNextPage }>Next</button>
+                </div>
+                <div onClick={ showForm } className='pb-5'>
                     <i className="fa-solid fa-add"></i>Add new
                 </div>
                 { addExerciseForm }
