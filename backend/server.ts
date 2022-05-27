@@ -42,10 +42,14 @@ app.use(rateLimiter);
 
 // defining router
 app.use("/api/exercises", exercises);
-app.use("*", (req, res) => res.status(404).json({ error: "not found" }));
+// for any route other than /api/exercises, return Not Found. This is useful
+// if API and frontend are deployed separately instead of using Express
+// to serve up prd React assets like below
+// app.use("*", (req, res) => res.status(404).json({ error: "not found" }));
 
 // using static React assets for production only 
 if (process.env.NODE_ENV === "production") {
+  console.log("Running exercise-programmer in prd!");
   app.use(express.static(path.join(__dirname,"build")));
   app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "build", "index.html"));
