@@ -44,10 +44,12 @@ app.use(rateLimiter);
 app.use("/api/exercises", exercises);
 app.use("*", (req, res) => res.status(404).json({ error: "not found" }));
 
-// using static React assets for production
-app.use(express.static(path.join(__dirname,"build")));
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "build", "index.html"));
-})
+// using static React assets for production only 
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname,"build")));
+  app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "build", "index.html"));
+  });
+}
 
 export default app
