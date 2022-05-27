@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "description": "",
     "scripts": {
-      "app": "ts-node ./backend/index.ts",
+      "start": "ts-node ./backend/index.ts",
       "heroku-postbuild": "cd frontend && npm i && npm run build"
     },
     "keywords": [],
