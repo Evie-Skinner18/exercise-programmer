@@ -7,17 +7,17 @@ function Navbar() {
         <nav>
             <li>
                 <Link to={"/login"} className='text-blue-700'>
-                    <i className="fa-solid fa-right-to-bracket"></i>
+                    <span className="material-icons mobile:text-3xl laptop:text-2xl desktop:text-3xl">logout</span>
                 </Link>
             </li>
             <li>
                 <Link to={"/exercise-list"}>
-                    <i className="fa-solid fa-dumbbell"></i>
+                    <span className="material-icons mobile:text-3xl laptop:text-2xl desktop:text-3xl">fitness_center</span>
                 </Link>
             </li>
             <li>
                 <Link to={"/"}>
-                    <i className="fa-solid fa-home"></i>
+                    <span className="material-icons mobile:text-3xl laptop:text-2xl desktop:text-3xl">home</span>
                 </Link>
             </li>
         </nav>

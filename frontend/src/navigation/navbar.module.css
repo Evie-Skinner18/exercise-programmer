@@ -8,13 +8,17 @@
     background-color: aquamarine;
 }
 
+.navbar li {
+    list-style-type: none;
+}
+
 .navbar a {
     writing-mode: vertical-lr;
     transform: scale(-1);
-    padding: 4px 4px 4px 4px;
+    padding: 4vh 0vh 1vh 1vh;
     margin-bottom: 80%;
 }
 
-.navbar a i {
-    transform: scale(-1);
+.navbar a span {
+    transform: rotate(90deg);
 }
