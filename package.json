@@ -4,7 +4,8 @@
     "description": "",
     "scripts": {
       "start": "node ./backend/dist/index.js",
-      "postinstall": "tsc",
+      "tsc": "tsc",
+      "postinstall": "npm run tsc",
       "heroku-postbuild": "cd frontend && npm i && npm run build"
     },
     "engines": { "node": "16.14.2" },
