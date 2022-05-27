@@ -46,9 +46,10 @@ app.use("/api/exercises", exercises);
 // using static React assets for production only 
 if (process.env.NODE_ENV === "production") {
   console.log("Running exercise-programmer in prd!");
-  app.use(express.static(path.join(__dirname,"../frontend/build")));
+  // by the time the TS compiles we will be in the /dist folder
+  app.use(express.static(path.join(__dirname,"../../frontend/build")));
   app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));
+    res.sendFile(path.join(__dirname, "../../frontend/build", "index.html"));
   });
 } else {
     // for any route other than /api/exercises, return Not Found. This is useful
