@@ -3,11 +3,14 @@
     "version": "1.0.0",
     "description": "",
     "scripts": {
-      "start": "node ./backend/dist/index.ts",
+      "start": "node ./backend/dist/index.js",
       "postinstall": "tsc",
       "heroku-postbuild": "cd frontend && npm i && npm run build"
     },
     "engines": { "node": "16.14.2" },
+    "dependencies": {
+        "tsc": "4.6.4"
+      },
     "keywords": [],
     "author": "",
     "license": "ISC"
