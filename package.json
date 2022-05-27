@@ -4,7 +4,7 @@
     "description": "",
     "scripts": {
       "start": "node ./backend/dist/index.js",
-      "tsc": "tsc",
+      "tsc": "tsc --project ./backend/tsconfig.json",
       "postinstall": "npm run tsc",
       "heroku-postbuild": "cd frontend && npm i && npm run build"
     },
