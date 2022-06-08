@@ -72,7 +72,7 @@ const ExerciseList = props => {
                     <button onClick={ goToNextPage }>Next</button>
                 </div>
                 <div onClick={ showForm } className='pb-5'>
-                    <i className="fa-solid fa-add"></i>Add new
+                    <span class="material-icons">add</span>Add new
                 </div>
                 { addExerciseForm }
                 { exerciseList.map((exercise, index) => (
