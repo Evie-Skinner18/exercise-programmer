@@ -1,4 +1,4 @@
-import { IExercise, Exercise } from "../../models/exercise";
+import { IExercise, Exercise, Category } from "../../models/exercise";
 import { IFilterOptions, SearchParameters } from "../ExerciseSearchOptions";
 import ExerciseRandomiser from "../../utils/exercise.randomiser";
 import mongoose from "mongoose";
@@ -21,6 +21,8 @@ export default class ExercisesService {
                     query = { "difficulty": { $eq: searchExercisesParams.filters.difficulty } }
                 } else if ("focus" in searchExercisesParams.filters) {
                     query = { "focus": { $eq: searchExercisesParams.filters.focus } }
+                } else if ("category" in searchExercisesParams.filters) {
+                    query = { "category": { $eq: searchExercisesParams.filters.category } }
                 }
             }
 
@@ -91,6 +93,7 @@ export default class ExercisesService {
                 _id: new mongoose.Types.ObjectId(),
                 name: exerciseToCreate.name,
                 focus: exerciseToCreate.focus,
+                category: exerciseToCreate.category.trim().toLowerCase(),
                 difficulty: exerciseToCreate.difficulty,
                 dateAdded: new Date()
             });

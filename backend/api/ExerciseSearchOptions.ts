@@ -2,6 +2,7 @@ export interface IFilterOptions {
     focus?: string;
     difficulty?: string;
     name?: string;
+    category?: string;
 }
 
 export class SearchParameters {

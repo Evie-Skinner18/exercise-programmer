@@ -47,6 +47,7 @@ export default class ExercisesProvider {
         const sanitiser = new Sanitiser();
         exercise.exercise.name = sanitiser.sanitiseUserInput(exercise.exercise.name);
         exercise.exercise.focus = sanitiser.sanitiseUserInput(exercise.exercise.focus);
+        exercise.exercise.category = sanitiser.sanitiseUserInput(exercise.category);
         exercise.exercise.difficulty = sanitiser.sanitiseUserInput(exercise.exercise.difficulty);
 
         let addExerciseResponse = {};
@@ -57,7 +58,5 @@ export default class ExercisesProvider {
         }
 
         return addExerciseResponse;
-    }
-
-    
+    }   
 }

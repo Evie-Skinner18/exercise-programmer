@@ -39,6 +39,7 @@ function AddNewExerciseForm({ addExercise }) {
         const provider = new ExercisesProvider();
 
         const exerciseRequestBody = { exercise: newExercise };
+        console.log(exerciseRequestBody);
         const addExerciseResponse = await provider.addExercise(exerciseRequestBody);
 
         if (addExerciseResponse.created) {
@@ -59,6 +60,12 @@ function AddNewExerciseForm({ addExercise }) {
         clearInterval(interval);
     }
 
+    const categories = [
+        "animal movements",
+        "kettlebell",
+        "karate"
+    ];
+
     return (
         <div className="add-exercise-form mobile:p-1">
             <form onSubmit={ handleSubmit(submitNewExercise) }>
@@ -78,6 +85,16 @@ function AddNewExerciseForm({ addExercise }) {
                     {...register("focus", { required: true })}
                 />
                 { errors.focus && <p className="text-red-500">Please enter a focus area for this exercise</p> }
+                <select
+                    placeholder="Exercise category (optional)"
+                    name="category" 
+                    className="mr-4 p-2 border-solid border-2"
+                    {...register("category", { required: false })}                
+                >
+                    <option value="animal movements">Animal movements</option>
+                    <option value="kettlebell">Kettlebell</option>
+                    <option value="karate">Karate</option>
+                </select>
                 <input
                     placeholder="Exercise difficulty out of 5"
                     type="number"
