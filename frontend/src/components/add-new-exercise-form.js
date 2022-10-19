@@ -36,10 +36,13 @@ function AddNewExerciseForm({ addExercise }) {
     };
 
     async function submitNewExercise(newExercise) {
+        console.log(register);
+        console.log(handleSubmit);
+        console.log(newExercise);
+
         const provider = new ExercisesProvider();
 
         const exerciseRequestBody = { exercise: newExercise };
-        console.log(exerciseRequestBody);
         const addExerciseResponse = await provider.addExercise(exerciseRequestBody);
 
         if (addExerciseResponse.created) {
@@ -68,7 +71,19 @@ function AddNewExerciseForm({ addExercise }) {
 
     return (
         <div className="add-exercise-form mobile:p-1">
-            <form onSubmit={ handleSubmit(submitNewExercise) }>
+    <form onSubmit={handleSubmit(submitNewExercise)}>
+      <input {...register("name")} />
+      <input {...register("focus")} />
+      <select {...register("category")}>
+        <option value="female">female</option>
+        <option value="male">male</option>
+        <option value="other">other</option>
+      </select>
+      {/* <input {...register("difficulty")} /> */}
+
+      <input type="submit" />
+    </form>
+            {/* <form onSubmit={ handleSubmit(submitNewExercise) }>
                 <input
                     placeholder="Exercise name"
                     type="text" 
@@ -77,6 +92,11 @@ function AddNewExerciseForm({ addExercise }) {
                     {...register("name", { required: true })}
                 />
                 { errors.name && <p className="text-red-500">Please enter a name for this exercise</p> }
+                <select {...register("category")}>
+                    <option value="animal movements">animal movements</option>
+                    <option value="kettlebell">kettlebell</option>
+                    <option value="karate">karate</option>
+                </select>
                 <input 
                     placeholder="Exercise focus area (e.g core)"
                     type="text" 
@@ -85,16 +105,6 @@ function AddNewExerciseForm({ addExercise }) {
                     {...register("focus", { required: true })}
                 />
                 { errors.focus && <p className="text-red-500">Please enter a focus area for this exercise</p> }
-                <select
-                    placeholder="Exercise category (optional)"
-                    name="category" 
-                    className="mr-4 p-2 border-solid border-2"
-                    {...register("category", { required: false })}                
-                >
-                    <option value="animal movements">Animal movements</option>
-                    <option value="kettlebell">Kettlebell</option>
-                    <option value="karate">Karate</option>
-                </select>
                 <input
                     placeholder="Exercise difficulty out of 5"
                     type="number"
@@ -108,7 +118,7 @@ function AddNewExerciseForm({ addExercise }) {
                     className={ addButtonTailwindClasses }>
                     Add
                 </button>
-            </form>
+            </form> */}
             <ToastMessage 
                 exercise={ exerciseForToast } 
                 isSuccessMessage={ exerciseSuccessfullyAdded } 
