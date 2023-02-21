@@ -5,7 +5,8 @@
     "scripts": {
       "start": "node ./backend/dist/index.js",
       "tsc": "tsc --project ./backend/tsconfig.json",
-      "postinstall": "npm run tsc"
+      "postinstall": "npm run tsc",
+      "build-frontend": "cd frontend && npm i && npm run build"
     },
     "engines": { "node": "16.14.2" },
     "dependencies": {
