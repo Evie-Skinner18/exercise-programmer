@@ -5,8 +5,7 @@
     "scripts": {
       "start": "node ./backend/dist/index.js",
       "tsc": "tsc --project ./backend/tsconfig.json",
-      "postinstall": "npm run tsc",
-      "heroku-postbuild": "cd frontend && npm i && npm run build"
+      "postinstall": "npm run tsc"
     },
     "engines": { "node": "16.14.2" },
     "dependencies": {
