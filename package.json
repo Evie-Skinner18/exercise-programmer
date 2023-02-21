@@ -2,6 +2,7 @@
     "name": "exercise-programmer",
     "version": "1.0.0",
     "description": "",
+    "main": "./backend/dist/index.js",
     "scripts": {
       "start": "node ./backend/dist/index.js",
       "tsc": "tsc --project ./backend/tsconfig.json",
