@@ -1,0 +1,16 @@
+public_fqdn = ""
+aws_region = "eu-west-2"
+az_count = 2
+ecs_fargate_version = "LATEST"
+ecs_cluster_name = "exercise-programmer"
+frontend_image = "exercise-frontend"
+frontend_port = 3000
+frontend_count = 1
+frontend_health_check_path = "/health"
+frontend_ecr_repository_name = "exercise-programmer-frontend"
+backend_ecr_repository_name = "exercise-programmer-backend"
+frontend_image_tag = "latest"
+ssl_certificate_arn = ""
+backend_image_tag = "latest"
+backend_port = 5001
+vpc_resource_id = "vpc-07cf9722786d4f517"

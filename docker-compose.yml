@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  exercise-backend:
+    build:
+      context: ./backend
+    image: exercise-backend
+    ports:
+      - "5001:5001"
+  exercise-frontend:
+    build:
+      context: ./frontend
+    image: exercise-frontend
+    ports:
+      - "3000:3000"

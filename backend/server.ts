@@ -5,6 +5,7 @@ import xssClean from "xss-clean";
 import hpp from "hpp";
 import { rateLimit } from "express-rate-limit";
 import helmet from "helmet";
+import actuator from "express-actuator";
 import dotenv from "dotenv";
 import path from "path";
 import exercises from "./api/exercises.route";
@@ -22,6 +23,9 @@ app.use(expressMongoSanitize());
 app.use(xssClean());
 app.use(hpp());
 app.use(helmet());
+
+// health check for a load balancer
+app.use(actuator());
 
 const corsOptions = {
     origin: process.env.REACT_APP_ORIGIN,
