@@ -20,3 +20,13 @@ provider "aws" {
   access_key = var.aws_access_key_id
   secret_key = var.aws_secret_access_key
 }
+
+resource "aws_ecr_repository" "exercise-programmer-backend" {
+  name         = var.frontend_ecr_repository_name
+  force_delete = true
+}
+
+resource "aws_ecr_repository" "exercise-programmer-frontend" {
+  name         = var.backend_ecr_repository_name
+  force_delete = true
+}

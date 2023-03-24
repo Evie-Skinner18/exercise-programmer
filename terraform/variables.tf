@@ -58,6 +58,10 @@ variable "frontend_ecr_repository_name" {
   type        = string
   description = "The name of the Elastic Container Repository for our frontend container images"
 }
+variable "frontend_ecr_repository_url" {
+  type        = string
+  description = "The name of the Elastic Container Repository for our frontend container images"
+}
 // See docs for ecs task definition: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html
 variable "apply_immediately" {
   type        = bool
@@ -129,4 +133,16 @@ variable "vpc_resource_id" {
   type        = string
   description = "The id of the Virtual Private Cloud resource in this environment"
   default     = ""
+}
+variable "aws_access_key_id" {
+  sensitive   = true
+  type        = string
+  description = "The id of the access key for AWS authentication"
+  default     = ""  
+}
+variable "aws_secret_access_key" {
+  sensitive   = true
+  type        = string
+  description = "The secret value of the access key for AWS authentication"
+  default     = ""  
 }
