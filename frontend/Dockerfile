@@ -1,4 +1,5 @@
 FROM node:14
+ENV REACT_APP_API_BASE_URL=http://localhost:5001/api/
 
 WORKDIR /usr/src/app
 
